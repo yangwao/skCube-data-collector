@@ -23,3 +23,7 @@ There are 4 types of radio packets
 In first days, there wasn't PWR packets.
 
 [Link to data structure](https://goo.gl/f6Tv99)
+
+How to read `.gsr` files
+* `vim 1498683704_OM3KAA__skCUBE.gsr`
+* `:% ! xxd`
