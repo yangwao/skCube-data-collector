@@ -14,17 +14,17 @@ const storage = multer.diskStorage({
   }
 })
 
-const upload = multer({ storage: storage})
+const upload = multer({storage: storage})
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.get('/', function (req, res, next) {
+  res.render('index', { title: 'Express' })
+})
 
-router.post('/sendraw', upload.single('gsr'), function(req, res, next) {
+router.post('/raw', upload.single('gsr'), function (req, res, next) {
   const b = req.body
 
-  if (req.file.size >= 267) {
+  if (req.file.size > 266) {
     return res.status(400).json({error: 'gsr file too big'})
   }
   if (!b.timestamp) {
@@ -43,4 +43,4 @@ router.post('/sendraw', upload.single('gsr'), function(req, res, next) {
   res.status(200).json({status: 'ok'})
 })
 
-module.exports = router;
+module.exports = router
