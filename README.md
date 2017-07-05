@@ -27,3 +27,8 @@ In first days, there wasn't PWR packets.
 How to read `.gsr` files
 * `vim 1498683704_OM3KAA__skCUBE.gsr`
 * `:% ! xxd`
+
+
+Other skcube.sk apps
+* https://3d.skcube.sk/
+* https://data.skcube.sk/
