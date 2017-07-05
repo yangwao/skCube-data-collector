@@ -28,6 +28,12 @@ How to read `.gsr` files
 * `vim 1498683704_OM3KAA__skCUBE.gsr`
 * `:% ! xxd`
 
+### TODO
+* send .gsr from client
+* store .gsr on server w/ callsign, timestamp, tag
+* parse .gsr (hex->dec) at server
+* store parsed .gsr to the db (mongodb)
+* data explorer for parsed data fetched from db
 
 Other skcube.sk apps
 * https://3d.skcube.sk/
