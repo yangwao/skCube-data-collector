@@ -8,6 +8,8 @@ They need to be converted to the decimal.
 
 Some hints from radio amateurs:
 ```
+tam su normalne udaje v hex ktore treba previest do dekadickej sustavy a podla tejto datovej struktury sa da urcit co je presne co;
+
 Su vo formate KISS tak ako ich posiela radiovy modem.
 Toto formatovanie je verejne dostupne napriklad tu: https://en.wikipedia.org/wiki/KISS_(TNC)
 po rozkodovani formatu KISS su data dalej zabalene vo formate AX.25 UI frame info napriklad tu: https://en.wikipedia.org/wiki/AX.25
