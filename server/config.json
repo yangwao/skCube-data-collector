@@ -1,5 +1,10 @@
 {
   "port": 9001,
   "address": "127.0.0.1",
-  "storageFolder": "/gsrStorage"
+  "storageFolder": "/gsrStorage",
+  "mongodb": {
+    "address": "127.0.0.1",
+    "port": 27017,
+    "db": "skcube"
+    }
 }
