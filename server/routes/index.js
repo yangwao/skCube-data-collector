@@ -23,10 +23,13 @@ router.get('/', function (req, res, next) {
 
 router.post('/raw', upload.single('gsr'), function (req, res, next) {
   const b = req.body
-
+  if (!req.file) {
+    return res.status(400).json({error: 'missing gsr'})
+  }
   if (req.file.size > 266) {
     return res.status(400).json({error: 'gsr file too big'})
   }
+
   if (!b.timestamp) {
     return res.status(400).json({error: 'missing timestamp'})
   }
