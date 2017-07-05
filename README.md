@@ -16,7 +16,7 @@ Hlavicka AX.25 obsahuje volaci znak satelitu a volaci znak adresata
 Prvy bajt dat sa nachadza na ofsete 0x0010
 ```
 
-There are 4 types of radio packets
+There are 4 types of radio packets, then there is 30s pause.
 
 `ADCS, CDHS, PWR a COM`
 
