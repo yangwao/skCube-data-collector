@@ -32,8 +32,8 @@ How to read `.gsr` files
 
 ### TODO
 * send .gsr from client
-* store .gsr on server w/ callsign, timestamp, tag
-* parse .gsr (hex->dec) at server
+* store .gsr on server w/ callsign, timestamp, tag (wao)
+* parse .gsr (hex->dec) at server (ewe)
 * store parsed .gsr to the db (mongodb)
 * data explorer for parsed data fetched from db
 
