@@ -1,0 +1,27 @@
+{
+  "name": "gsr-parser",
+  "version": "1.0.0",
+  "description": "data from 🛰 space",
+  "main": "index.js",
+  "dependencies": {
+    "ax25": "^1.1.2",
+    "typescript": "^2.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yangwao/skCube_data_collector.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yangwao/skCube_data_collector/issues"
+  },
+  "homepage": "https://github.com/yangwao/skCube_data_collector#readme"
+}

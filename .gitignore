@@ -60,3 +60,6 @@ typings/
 lab/
 server/gsrStorage/
 server/mongodb/
+
+# Parser
+parser/build
