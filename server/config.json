@@ -3,8 +3,18 @@
   "address": "127.0.0.1",
   "storageFolder": "/gsrStorage",
   "mongodb": {
-    "address": "127.0.0.1",
+    "host": "127.0.0.1",
     "port": 27017,
     "db": "skcube"
+  },
+  "pino": {
+    "safe": true,
+    "name": "gsrCollector",
+    "timestamp": true,
+    "prettyPrint": true,
+    "serializers": {
+      "req": "pino.stdSerializers.req",
+      "res": "pino.stdSerializers.res"
     }
+  }
 }

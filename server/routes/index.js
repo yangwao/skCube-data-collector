@@ -2,6 +2,8 @@ const CWD = process.cwd()
 const config = require(CWD + '/config.json')
 
 const uuid = require('uuid')
+const crypto = require('crypto')
+const fs = require('fs')
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
@@ -14,6 +16,13 @@ const storage = multer.diskStorage({
   }
 })
 
+function checksum (str, algorithm, encoding) {
+    return crypto
+        .createHash(algorithm)
+        .update(str, 'utf8')
+        .digest(encoding || 'hex')
+}
+
 const upload = multer({storage: storage})
 
 /* GET home page. */
@@ -22,6 +31,7 @@ router.get('/', function (req, res, next) {
 })
 
 router.post('/raw', upload.single('gsr'), function (req, res, next) {
+
   const b = req.body
   if (!req.file) {
     return res.status(400).json({error: 'missing gsr'})
@@ -42,6 +52,10 @@ router.post('/raw', upload.single('gsr'), function (req, res, next) {
   if (!b.tag) {
     return res.status(400).json({error: 'missing tag'})
   }
+
+  fs.readFile(CWD + config.storageFolder + '/' + req.file.filename, function(err, data) {
+    l.info(checksum(data, 'sha512'))
+  })
 
   res.status(200).json({status: 'ok'})
 })
