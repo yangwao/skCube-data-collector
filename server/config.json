@@ -1,7 +1,6 @@
 {
   "port": 9001,
   "address": "127.0.0.1",
-  "storageFolder": "/gsrStorage",
   "mongodb": {
     "host": "127.0.0.1",
     "port": 27017,
@@ -15,6 +14,12 @@
     "serializers": {
       "req": "pino.stdSerializers.req",
       "res": "pino.stdSerializers.res"
+    }
+  },
+  "gsr": {
+    "file": {
+      "maxSize": 266,
+      "storageFolder": "/gsrStorage"
     }
   }
 }

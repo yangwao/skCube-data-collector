@@ -9,7 +9,7 @@ const router = express.Router()
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, CWD + config.storageFolder)
+    cb(null, CWD + config.gsr.file.storageFolder)
   },
   filename: function (req, file, cb) {
     cb(null, uuid.v4() + '_' + file.originalname)
@@ -36,10 +36,9 @@ router.post('/raw', upload.single('gsr'), function (req, res, next) {
   if (!req.file) {
     return res.status(400).json({error: 'missing gsr'})
   }
-  if (req.file.size > 266) {
+  if (req.file.size > config.gsr.file.maxSize) {
     return res.status(400).json({error: 'gsr file too big'})
   }
-
   if (!b.timestamp) {
     return res.status(400).json({error: 'missing timestamp'})
   }
@@ -53,7 +52,7 @@ router.post('/raw', upload.single('gsr'), function (req, res, next) {
     return res.status(400).json({error: 'missing tag'})
   }
 
-  fs.readFile(CWD + config.storageFolder + '/' + req.file.filename, function(err, data) {
+  fs.readFile(CWD + config.gsr.file.storageFolder + '/' + req.file.filename, function(err, data) {
     l.info(checksum(data, 'sha512'))
   })
 
