@@ -1,5 +1,5 @@
 # skCube_data_collector
-data from 🛰 space
+data from 🛰 🌌 space
 
 Quick desc
 
@@ -30,12 +30,12 @@ How to read `.gsr` files
 * `vim 1498683704_OM3KAA__skCUBE.gsr`
 * `:% ! xxd`
 
-### TODO
+### ROADMAP
 * send .gsr from client
-* store .gsr on server w/ callsign, timestamp, tag (wao)
-* parse .gsr (hex->dec) at server (ewe)
+* 70% store .gsr on server w/ callsign, timestamp, tag (wao)
+* 10% parse .gsr (hex->dec) at server (ewe)
 * store parsed .gsr to the db (mongodb)
-* data explorer for parsed data fetched from db
+* data explorer for parsed data fetched from db (~ [OpenMCT](https://nasa.github.io/openmct/))
 
 Other skcube.sk apps
 * https://3d.skcube.sk/
