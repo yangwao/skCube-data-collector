@@ -4,6 +4,7 @@ const config = require(CWD + '/config.json')
 const uuid = require('uuid')
 const crypto = require('crypto')
 const fs = require('fs')
+const db = require('../lib/mongo')
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
@@ -16,6 +17,8 @@ const storage = multer.diskStorage({
   }
 })
 
+const upload = multer({storage: storage})
+
 function checksum (str, algorithm, encoding) {
   return crypto
     .createHash(algorithm)
@@ -23,17 +26,18 @@ function checksum (str, algorithm, encoding) {
     .digest(encoding || 'hex')
 }
 
-const upload = multer({storage: storage})
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: config.pino.name })
 })
 
-router.post('/raw', upload.single('gsr'), function (req, res, next) {
+router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
   const b = req.body
   if (!req.file) {
     return res.status(400).json({error: 'missing gsr'})
+  }
+  if (req.file.originalname.length > config.gsr.file.maxLength) {
+    return res.status(400).json({error: 'gsr file originalname too long'})
   }
   if (req.file.size > config.gsr.file.maxSize) {
     return res.status(400).json({error: 'gsr file too big'})
@@ -55,11 +59,30 @@ router.post('/raw', upload.single('gsr'), function (req, res, next) {
     if (err) {
       l.error('raw-gsr-readFile', err)
     }
+    const id = req.file.filename.split('_')[0]
+    let fileChecksum = checksum(data, 'sha512')
 
-    l.info(checksum(data, 'sha512'))
+    let doc = {
+      _id: id,
+      checksum: fileChecksum,
+      filename: req.file.filename,
+      createdAt: Date.now(),
+      meta: b.meta,
+      callsign: {
+        source: b.sourceCallsign,
+        destination: b.destinationCallsign
+      }
+    }
+
+    db.insertOne('gsr', doc, function (cb) {
+      res.status(200).json({
+        status: 'ok',
+        checksum: fileChecksum,
+        fileName: req.file.filename,
+        _id: id
+      })
+    })
   })
-
-  res.status(200).json({status: 'ok'})
 })
 
 module.exports = router

@@ -52,4 +52,4 @@ Other LEO/Cubesat projects
 * [SatNogs](https://satnogs.org/)
 
 skCube teardown
-![img](skcube-teardown.jpg)
+![img](skCube-teardown.jpg)

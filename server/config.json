@@ -4,7 +4,7 @@
   "mongodb": {
     "host": "127.0.0.1",
     "port": 27017,
-    "db": "skcube"
+    "db": "skCube"
   },
   "pino": {
     "safe": true,
@@ -19,6 +19,7 @@
   "gsr": {
     "file": {
       "maxSize": 266,
+      "maxLength": 50,
       "storageFolder": "/gsrStorage"
     }
   }
