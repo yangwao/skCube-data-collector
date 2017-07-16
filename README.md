@@ -38,5 +38,8 @@ How to read `.gsr` files
 * data explorer for parsed data fetched from db (~ [OpenMCT](https://nasa.github.io/openmct/))
 
 Other skcube.sk apps
-* https://3d.skcube.sk/
-* https://data.skcube.sk/
+* [3d.skcube.sk](https://3d.skcube.sk/)
+* [data.skcube.sk](https://data.skcube.sk/)
+
+Other LEO/Cubesat projects
+* [SatNogs](https://satnogs.org/)
