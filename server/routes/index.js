@@ -17,21 +17,20 @@ const storage = multer.diskStorage({
 })
 
 function checksum (str, algorithm, encoding) {
-    return crypto
-        .createHash(algorithm)
-        .update(str, 'utf8')
-        .digest(encoding || 'hex')
+  return crypto
+    .createHash(algorithm)
+    .update(str, 'utf8')
+    .digest(encoding || 'hex')
 }
 
 const upload = multer({storage: storage})
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' })
+  res.render('index', { title: config.pino.name })
 })
 
 router.post('/raw', upload.single('gsr'), function (req, res, next) {
-
   const b = req.body
   if (!req.file) {
     return res.status(400).json({error: 'missing gsr'})
@@ -48,11 +47,15 @@ router.post('/raw', upload.single('gsr'), function (req, res, next) {
   if (!b.destinationCallsign) {
     return res.status(400).json({error: 'missing destinationCallsign'})
   }
-  if (!b.tag) {
-    return res.status(400).json({error: 'missing tag'})
+  if (!b.meta) {
+    return res.status(400).json({error: 'missing meta'})
   }
 
-  fs.readFile(CWD + config.gsr.file.storageFolder + '/' + req.file.filename, function(err, data) {
+  fs.readFile(CWD + config.gsr.file.storageFolder + '/' + req.file.filename, function (err, data) {
+    if (err) {
+      l.error('raw-gsr-readFile', err)
+    }
+
     l.info(checksum(data, 'sha512'))
   })
 

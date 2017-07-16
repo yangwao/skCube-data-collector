@@ -24,5 +24,8 @@
   "devDependencies": {
     "nodemon": "^1.11.0",
     "standard": "*"
+  },
+  "standard": {
+    "globals": [ "l" ]
   }
 }
