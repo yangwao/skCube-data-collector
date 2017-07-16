@@ -44,12 +44,12 @@ How to read `.gsr` files
 * [Technologies on board EN](http://www.skcube.sk/skcube/first-slovak-satellite-skcube/)
 * [For radioamateurs SK](http://www.skcube.sk/vystupy/pre-radioamaterov/)
 
-Other skcube.sk apps
+### Other skcube.sk apps
 * [3d.skcube.sk](https://3d.skcube.sk/)
 * [data.skcube.sk](https://data.skcube.sk/)
 
-Other LEO/Cubesat projects
+### Other LEO/Cubesat projects
 * [SatNogs](https://satnogs.org/)
 
-skCube teardown
+## skCube teardown
 ![img](skCube-teardown.jpg)
