@@ -1,10 +1,10 @@
 <template>
   <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
+    <img id="logo" src="~@/assets/sk-cube-rr.png" alt="skcube">
     <main>
       <div class="left-side">
         <span class="title">
-          Welcome to your new project!
+          Welcome to skCube client GSR collect0r
         </span>
         <system-information></system-information>
       </div>
@@ -13,10 +13,10 @@
         <div class="doc">
           <div class="title">Getting Started</div>
           <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
+            Select your folder where gsr files are created and we will do the rest
           </p>
+          <button @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br>
+          <input type="file" webkitdirectory />
           <button @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br>
         </div>
         <div class="doc">
@@ -41,6 +41,7 @@
       }
     }
   }
+
 </script>
 
 <style>
@@ -69,7 +70,7 @@
   #logo {
     height: auto;
     margin-bottom: 20px;
-    width: 420px;
+    width: 200px;
   }
 
   main {
