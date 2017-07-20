@@ -19,11 +19,16 @@
                         <br>
                         <br>
                         <p>
-                              Selected path:
+                          Selected path:
                         </p>
                         <br>
+                      </div>
+                        <div class="doc">
+                          <button class="alt">Start sending GSR packets</button>
+                          <button class="alt">Stop sending GSR packets</button>
+                        </div>
                   </div>
-            </div>
+
       </main>
 </div>
 </template>
