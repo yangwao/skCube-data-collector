@@ -63,3 +63,6 @@ server/mongodb/
 
 # Parser
 parser/build
+
+# skcube-client
+skCube-client/dist/

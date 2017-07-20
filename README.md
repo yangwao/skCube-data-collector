@@ -31,10 +31,10 @@ How to read `.gsr` files
 * `:% ! xxd`
 
 ### ROADMAP
-* send .gsr from client
-* 70% store .gsr on server w/ callsign, timestamp, tag (wao)
+* 10% send .gsr from client (wao)
+* 80% store .gsr on server w/ callsign, timestamp, tag (wao)
 * 10% parse .gsr (hex->dec) at server (ewe)
-* store parsed .gsr to the db (mongodb)
+* store parsed .gsr to the db
 * data explorer for parsed data fetched from db (~ [OpenMCT](https://nasa.github.io/openmct/))
 
 ### skCube
