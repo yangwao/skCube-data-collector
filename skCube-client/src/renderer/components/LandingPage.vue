@@ -19,12 +19,18 @@
                         <br>
                         <br>
                         <p>
-                          Selected path:
+                          Selected path: {{ path }}
                         </p>
+                          Meta: <input v-model="meta" placeholder="fill your meta">
+                          <p>This text will be joined as meta tag</p>
+                          <p>
+                            {{ meta }}
+                          </p>
+
                         <br>
                       </div>
                         <div class="doc">
-                          <button class="alt">Start sending GSR packets</button>
+                          <button class="alt" v-on:click="sendRaw">Start sending GSR packets</button>
                           <button class="alt">Stop sending GSR packets</button>
                         </div>
                   </div>
@@ -34,9 +40,17 @@
 </template>
 
 <script>
+import axios from 'axios'
 import SystemInformation from './LandingPage/SystemInformation'
 
 export default {
+  data() {
+    return {
+      path: '',
+      meta: '',
+      counter: 0,
+    }
+  },
   name: 'landing-page',
   components: {
     SystemInformation
@@ -57,6 +71,28 @@ export default {
         properties: ['openDirectory']
       })
       console.log(path)
+      this.path = path[0]
+      this.counter += 1
+      console.log(this.counter);
+    },
+    sendRaw: function() {
+      axios({
+        method: 'post',
+        baseURL: 'http://localhost:9001',
+        url: '/v1/raw',
+        data: {
+           timestamp: '0',
+           sourceCallsign: 'skCUBE',
+           desinationCallsign: 'OM3KAA',
+           meta: 'znacka'
+         }
+      })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   }
 }
