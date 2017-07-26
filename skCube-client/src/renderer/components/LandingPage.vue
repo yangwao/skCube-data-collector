@@ -1,41 +1,41 @@
 <template>
 <div id="wrapper">
-      <img id="logo" src="~@/assets/sk-cube-rr.png" alt="skcube">
-      <main>
-            <div class="left-side">
-                  <span class="title">
-                        skCube client GSR collect0r
-                  </span>
-                  <system-information></system-information>
-            </div>
+  <img id="logo" src="~@/assets/sk-cube-rr.png" alt="skcube">
+  <main>
+    <div class="left-side">
+      <span class="title">
+            skCube client GSR collect0r
+      </span>
+      <system-information></system-information>
+    </div>
 
-            <div class="right-side">
-                  <div class="doc">
-                        <div class="title">Getting Started</div>
-                        <p>
-                              Select your folder where GSR files are created and we will do the rest
-                        </p>
-                        <button v-on:click="openDialog">Choose folder</button>
-                        <br>
-                        <br>
-                        <p>
-                          Selected path: {{ path }}
-                        </p>
-                          Meta: <input v-model="meta" placeholder="fill your meta">
-                          <p>This text will be joined as meta tag</p>
-                          <p>
-                            {{ meta }}
-                          </p>
+    <div class="right-side">
+      <div class="doc">
+        <div class="title">Getting Started</div>
+        <p>
+              Select your folder where GSR files are created and we will do the rest
+        </p>
+        <button v-on:click="openDialog">Choose folder</button>
+        <br>
+        <br>
+        <p>
+          Selected path: {{ path }}
+        </p>
+          Meta: <input v-model="meta" placeholder="fill your meta">
+          <p>This text will be joined as meta tag</p>
+          <p>
+            {{ meta }}
+          </p>
 
-                        <br>
-                      </div>
-                        <div class="doc">
-                          <button class="alt" v-on:click="sendRaw">Start sending GSR packets</button>
-                          <button class="alt">Stop sending GSR packets</button>
-                        </div>
-                  </div>
+        <br>
+      </div>
+        <div class="doc">
+          <button class="alt" v-on:click="sendRaw">Start sending GSR packets</button>
+          <button class="alt">Stop sending GSR packets</button>
+        </div>
+      </div>
 
-      </main>
+  </main>
 </div>
 </template>
 
@@ -76,17 +76,23 @@ export default {
       console.log(this.counter);
     },
     sendRaw: function() {
-      axios({
-        method: 'post',
-        baseURL: 'http://localhost:9001',
-        url: '/v1/raw',
-        data: {
-           timestamp: '0',
-           sourceCallsign: 'skCUBE',
-           desinationCallsign: 'OM3KAA',
-           meta: 'znacka'
-         }
-      })
+      var params = new URLSearchParams();
+      params.append('timestamp', '1498683574')
+      params.append('sourceCallsign', 'skCube')
+      params.append('destinationCallsign', 'OM3KAA')
+      params.append('meta', 'znacka')
+      axios.post('http://localhost:9001/v1/raw', params)
+      // axios({
+      //   method: 'post',
+      //   baseURL: 'http://localhost:9001',
+      //   url: '/v1/raw',
+      //   data: {
+      //      timestamp: '0',
+      //      sourceCallsign: 'skCUBE',
+      //      desinationCallsign: 'OM3KAA',
+      //      meta: 'znacka'
+      //    }
+      // })
         .then(function (response) {
           console.log(response);
         })
