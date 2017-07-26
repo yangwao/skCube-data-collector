@@ -25,7 +25,7 @@ MongoClient.connect(mongoUrl, function (err, database) {
     l.error('Could not connect to mongodb')
   }
   db = database
-  l.info('Connected successfully to server')
+  l.info('Connected successfully to mongodb')
   getDbStats(db, function () {
     // insertOne(db, col, doc, function () {
     //   db.close()

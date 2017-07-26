@@ -28,7 +28,7 @@ var server = http.createServer(app);
  */
 
 server.listen(port, config.address);
-l.info('Listening on ' + config.address + ':' + config.port)
+l.info('Server @ ' + config.address + ':' + config.port)
 server.on('error', onError);
 server.on('listening', onListening);
 
