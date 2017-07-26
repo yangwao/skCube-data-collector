@@ -10,6 +10,7 @@
     "blake2b": "^2.1.2",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "express-pino-logger": "^2.0.0",
@@ -26,6 +27,8 @@
     "standard": "*"
   },
   "standard": {
-    "globals": [ "l" ]
+    "globals": [
+      "l"
+    ]
   }
 }
