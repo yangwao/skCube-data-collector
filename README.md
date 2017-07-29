@@ -1,4 +1,4 @@
-# skCube_data_collector
+# skCube-data-collector
 data from 🛰 🌌 space
 
 Quick desc

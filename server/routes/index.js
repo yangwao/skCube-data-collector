@@ -34,7 +34,7 @@ router.get('/', function (req, res, next) {
 router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
   const b = req.body
   if (!req.file) {
-    return res.status(400).json({error: 'missing gsr'})
+    return res.status(400).json({error: 'missing gsr attachment'})
   }
   if (req.file.originalname.length > config.gsr.file.maxLength) {
     return res.status(400).json({error: 'gsr file originalname too long'})
