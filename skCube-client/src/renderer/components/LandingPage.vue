@@ -49,8 +49,6 @@
 </template>
 
 <script>
-import SystemInformation from './LandingPage/SystemInformation'
-
 export default {
   data() {
     return {
@@ -66,9 +64,7 @@ export default {
     }
   },
   name: 'landing-page',
-  components: {
-    SystemInformation
-  },
+  components: {},
   methods: {
     open(link) {
       this.$electron.shell.openExternal(link)
@@ -114,9 +110,9 @@ export default {
       var FormData = require('form-data')
 
       var formData = {
-        sourceCallsign: 'skCube',
-        destinationCallsign: 'OM3KAA',
-        meta: 'znacka',
+        sourceCallsign: this.packetInfo.sourceCallsign,
+        destinationCallsign: this.packetInfo.destinationCallsign,
+        meta: this.packetInfo.meta,
         gsr: fs.createReadStream(this.path)
       }
 
@@ -124,7 +120,7 @@ export default {
         if (err) {
           return console.error('upload failed:', err);
         }
-        console.log('Upload successful!  Server responded with:', body);
+        console.log('Server response:', body);
       });
     }
   }
