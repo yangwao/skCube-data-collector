@@ -15,18 +15,32 @@
         <p>
               Select your folder where GSR files are created and we will do the rest
         </p>
-        <button v-on:click="openDialog">Choose folder</button>
+        <button v-on:click="openDialogFile">Choose folder</button>
         <br>
         <br>
         <p>
           Selected path: {{ path }}
         </p>
-          Meta: <input v-model="meta" placeholder="fill your meta">
-          <p>This text will be joined as meta tag</p>
-          <p>
-            {{ meta }}
-          </p>
+        <p>
+          Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
+        </p>
+        <p>
+          Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
+        </p>
+        <p>
+          Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
+        </p>
 
+          <p>This data will be joined to request</p>
+          <p>
+            {{ packetInfo.meta }}
+          </p>
+          <p>
+            {{ packetInfo.destinationCallsign }}
+          </p>
+          <p>
+            {{ packetInfo.sourceCallsign }}
+          </p>
         <br>
       </div>
         <div class="doc">
@@ -40,15 +54,20 @@
 </template>
 
 <script>
-import axios from 'axios'
 import SystemInformation from './LandingPage/SystemInformation'
 
 export default {
   data() {
     return {
+      targetServer: 'http://localhost:9001/v1/raw',
       path: '',
-      meta: '',
+      packetInfo: {
+        meta: 'default meta',
+        sourceCallsign: 'jkl',
+        destinationCallsign: 'iop'
+      },
       counter: 0,
+      gsrPacket: ''
     }
   },
   name: 'landing-page',
@@ -59,10 +78,30 @@ export default {
     open(link) {
       this.$electron.shell.openExternal(link)
     },
-    openDialog: function () {
-      const {
-        dialog
-      } = require('electron').remote
+    openDialogFile: function () {
+      const { dialog } = require('electron').remote
+      var fs = require('fs')
+      const path = dialog.showOpenDialog({
+        filters: [{
+          name: 'Packets',
+          extensions: ['gsr']
+        }],
+        properties: ['openFile']
+      })
+
+      this.path = path[0]
+
+      fs.readFile(path[0], 'utf-8', (err, data) => {
+        if (err) {
+          console.log(err)
+          return
+        }
+        console.log('gsr packet content', data);
+        this.gsrPacket = data
+      })
+    },
+    openDialogDir: function () {
+      const { dialog } = require('electron').remote
       const path = dialog.showOpenDialog({
         filters: [{
           name: 'Packets',
@@ -72,33 +111,26 @@ export default {
       })
       console.log(path)
       this.path = path[0]
-      this.counter += 1
-      console.log(this.counter);
     },
     sendRaw: function() {
-      var params = new URLSearchParams();
-      params.append('timestamp', '1498683574')
-      params.append('sourceCallsign', 'skCube')
-      params.append('destinationCallsign', 'OM3KAA')
-      params.append('meta', 'znacka')
-      axios.post('http://localhost:9001/v1/raw', params)
-      // axios({
-      //   method: 'post',
-      //   baseURL: 'http://localhost:9001',
-      //   url: '/v1/raw',
-      //   data: {
-      //      timestamp: '0',
-      //      sourceCallsign: 'skCUBE',
-      //      desinationCallsign: 'OM3KAA',
-      //      meta: 'znacka'
-      //    }
-      // })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      console.log('using this path', this.path);
+      var request = require('request')
+      var fs = require('fs')
+      var FormData = require('form-data')
+
+      var formData = {
+        sourceCallsign: 'skCube',
+        destinationCallsign: 'OM3KAA',
+        meta: 'znacka',
+        gsr: fs.createReadStream(this.path)
+      }
+
+      request.post({url:this.targetServer, formData: formData}, function optionalCallback(err, httpResponse, body) {
+        if (err) {
+          return console.error('upload failed:', err);
+        }
+        console.log('Upload successful!  Server responded with:', body);
+      });
     }
   }
 }
