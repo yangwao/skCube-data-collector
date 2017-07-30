@@ -72,7 +72,7 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
     }
 
     db.insertOne('gsr', doc, function (cb) {
-      res.status(200).json({
+      res.status(201).json({
         status: 'ok',
         checksum: fileChecksum,
         fileName: req.file.filename,

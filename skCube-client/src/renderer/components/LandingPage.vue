@@ -3,13 +3,6 @@
   <img id="logo" src="~@/assets/sk-cube-rr.png" alt="skcube">
   <main>
     <div class="left-side">
-      <span class="title">
-            skCube client GSR collect0r
-      </span>
-      <system-information></system-information>
-    </div>
-
-    <div class="right-side">
       <div class="doc">
         <div class="title">Getting Started</div>
         <p>
@@ -19,7 +12,10 @@
         <br>
         <br>
         <p>
-          Selected path: {{ path }}
+          Selected path:
+        </p>
+        <p>
+          {{ path }}
         </p>
         <p>
           Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
@@ -30,17 +26,16 @@
         <p>
           Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
         </p>
-
-          <p>This data will be joined to request</p>
-          <p>
-            {{ packetInfo.meta }}
-          </p>
-          <p>
-            {{ packetInfo.destinationCallsign }}
-          </p>
-          <p>
-            {{ packetInfo.sourceCallsign }}
-          </p>
+        <p>This data will be joined to request</p>
+        <p>
+          {{ packetInfo.meta }}
+        </p>
+        <p>
+          {{ packetInfo.destinationCallsign }}
+        </p>
+        <p>
+          {{ packetInfo.sourceCallsign }}
+        </p>
         <br>
       </div>
         <div class="doc">

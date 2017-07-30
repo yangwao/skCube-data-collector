@@ -1,6 +1,9 @@
 # skCube-data-collector
 data from 🛰 🌌 space
 
+# api
+[Writing your own client? Here is api documentation](server/README.md)
+
 Quick desc
 
 `.gsr` files are in hex.
@@ -31,11 +34,11 @@ How to read `.gsr` files
 * `:% ! xxd`
 
 ### ROADMAP
-* 10% send .gsr from client (wao)
-* 80% store .gsr on server w/ callsign, timestamp, tag (wao)
-* 10% parse .gsr (hex->dec) at server (ewe)
-* store parsed .gsr to the db
-* data explorer for parsed data fetched from db (~ [OpenMCT](https://nasa.github.io/openmct/))
+- [x] send .gsr from client (wao)
+- [x] store .gsr on server w/ callsign, timestamp, tag (wao)
+- 10% parse .gsr (hex->dec) at server (ewe)
+- store parsed .gsr to the db
+- data explorer for parsed data fetched from db (~ [OpenMCT](https://nasa.github.io/openmct/))
 
 ### skCube
 * [skCube homepage](http://www.skcube.sk/)
