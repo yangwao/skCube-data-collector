@@ -2,13 +2,19 @@ extends layout
 
 block content
   h1= title
-  p showing gsr packets since #{createdAt}
+  p received gsr packets since #{createdAt}
   ul
     each val in docs
       li= val._id
       | createdAt  
       = val.createdAt
       | 
-      a(href= val.filename)  download
-      |  seen 
-      = val.seen
+      a(href= rootDir + val.filename)  download
+      | 
+      if val.size
+        = val.size
+        | B
+      if val.seen
+        |  seen 
+        = val.seen
+      

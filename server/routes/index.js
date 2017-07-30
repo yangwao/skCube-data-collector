@@ -41,6 +41,7 @@ router.get('/v1/createdAt/:time', function (req, res, next) {
     res.render('showgsr', {
       title: config.pino.name,
       createdAt: req.params.time,
+      rootDir: config.rootDir,
       docs: docs })
   })
 
@@ -79,6 +80,7 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
       filename: req.file.filename,
       createdAt: Date.now(),
       meta: b.meta,
+      size: req.file.size,
       callsign: {
         source: b.sourceCallsign,
         destination: b.destinationCallsign
