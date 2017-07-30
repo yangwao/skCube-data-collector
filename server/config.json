@@ -23,5 +23,12 @@
       "maxLength": 50,
       "storageFolder": "/gsrStorage"
     }
+  },
+  "limits": {
+    "callsign": {
+      "source": 6,
+      "destination": 6
+    },
+    "meta": 20
   }
 }

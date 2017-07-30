@@ -6,15 +6,19 @@ block content
   ul
     each val in docs
       li= val._id
-      | createdAt  
-      = val.createdAt
-      | 
-      a(href= rootDir + val.filename)  download
-      | 
+      a(href= rootDir + val.filename) download
       if val.size
+        | 
         = val.size
         | B
+      |  createdAt  
+      = val.createdAt
+      |  
+
+      | 
+      = val.callsign.source
+      | 
+      = val.callsign.destination
       if val.seen
-        |  seen 
+        |  seen  
         = val.seen
-      

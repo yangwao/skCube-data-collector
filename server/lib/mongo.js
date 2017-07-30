@@ -48,7 +48,6 @@ let find = function (col, q, cb) {
       if (err) {
         l.error('findBy', err)
       }
-      l.info('AAA', docs)
       cb(docs)
     })
 }
