@@ -71,23 +71,25 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
       }
     }
 
-    db.findDupes('gsr', { checksum: doc.checksum }, function (docs) {
-      if (docs.length > 0) {
+    db.findDupes('gsr', { checksum: doc.checksum }, function (dupe) {
+      if (dupe.value !== null &&
+        dupe.value.hasOwnProperty('checksum') &&
+        dupe.value.checksum === doc.checksum) {
         res.status(200).json({
-          _id: docs[0]._id,
-          filename: docs[0].filename,
-          checksum: docs[0].checksum,
+          _id: dupe.value._id,
+          checksum: dupe.value.checksum,
+          filename: dupe.value.filename,
           status: 'ok',
-          dupe: true
+          seen: dupe.value.seen
         })
       }
-      if (docs.length === 0) {
+      if (dupe.value === null) {
         db.insertOne('gsr', doc, function (cb) {
           res.status(201).json({
-            status: 'ok',
+            _id: id,
             checksum: fileChecksum,
             fileName: req.file.filename,
-            _id: id
+            status: 'ok'
           })
         })
       }

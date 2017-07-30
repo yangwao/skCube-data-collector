@@ -8,14 +8,14 @@ const mongoUrl = 'mongodb://' +
 
 var db
 
-let getDbStats = function (db, callback) {
+let getDbStats = function (db, cb) {
   db.command({'dbStats': 1},
     function (err, results) {
       if (err) {
         l.error(err)
       }
-      l.info(results)
-      callback()
+      l.info(`gsr packets in db: ${results.objects}`)
+      cb()
     }
   )
 }
@@ -31,14 +31,13 @@ MongoClient.connect(mongoUrl, function (err, database) {
   })
 })
 
-let insertOne = function (col, doc, callback) {
+let insertOne = function (col, doc, cb) {
   let collection = db.collection(col)
   collection.insertOne(doc, function (err, r) {
     if (err) {
       l.error('insertOne', err)
     }
-
-    callback(r)
+    cb(r)
   })
 }
 
@@ -54,13 +53,15 @@ let findBy = function (col, q, cb) {
 }
 
 let findDupes = function (col, q, cb) {
-  let cursor = db.collection(col)
-  cursor.find(q)
-    .toArray(function (err, docs) {
-      if (err) {
-        l.error('findBy', err)
-      }
-      cb(docs)
+  let cursor = db.collection('gsr')
+  cursor.findOneAndUpdate(
+    q,
+    { $inc: { seen: 1 } },
+    { returnOriginal: false },
+    function (err, r) {
+      if (err) l.error('findDupes', err)
+
+      cb(r)
     })
 }
 
