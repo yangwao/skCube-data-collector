@@ -31,6 +31,20 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: config.pino.name })
 })
 
+router.get('/v1/createdAt/:time', function (req, res, next) {
+  db.find('gsr', { createdAt: { $gt: req.params.time }}, function (docs) {
+    // if (err) {
+    //   l.error(err)
+    // }
+    l.info(docs)
+
+    res.render('showgsr', {
+      title: config.pino.name,
+      createdAt: req.params.time,
+      docs: docs })
+  })
+
+})
 router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
   const b = req.body
   if (!req.file) {

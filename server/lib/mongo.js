@@ -41,16 +41,29 @@ let insertOne = function (col, doc, cb) {
   })
 }
 
-let findBy = function (col, q, cb) {
-  let cursor = db.collection(col)
-  cursor.find(q)
+let find = function (col, q, cb) {
+  let cursor = db.collection('gsr')
+  cursor.find(
+    {createdAt: { $gt: 1501426019119}})
     .toArray(function (err, docs) {
       if (err) {
         l.error('findBy', err)
       }
+      l.info('AAA', docs)
       cb(docs)
     })
 }
+// let find = function (col, q, cb) {
+//   let cursor = db.collection('gsr')
+//   cursor.find(q)
+//     .toArray(function (err, docs) {
+//       if (err) {
+//         l.error('findBy', err)
+//       }
+//       l.info('AAA', docs)
+//       cb(docs)
+//     })
+// }
 
 let findDupes = function (col, q, cb) {
   let cursor = db.collection('gsr')
@@ -66,5 +79,5 @@ let findDupes = function (col, q, cb) {
 }
 
 module.exports.insertOne = insertOne
-module.exports.findBy = findBy
+module.exports.find = find
 module.exports.findDupes = findDupes
