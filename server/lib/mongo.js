@@ -42,4 +42,28 @@ let insertOne = function (col, doc, callback) {
   })
 }
 
+let findBy = function (col, q, cb) {
+  let cursor = db.collection(col)
+  cursor.find(q)
+    .toArray(function (err, docs) {
+      if (err) {
+        l.error('findBy', err)
+      }
+      cb(docs)
+    })
+}
+
+let findDupes = function (col, q, cb) {
+  let cursor = db.collection(col)
+  cursor.find(q)
+    .toArray(function (err, docs) {
+      if (err) {
+        l.error('findBy', err)
+      }
+      cb(docs)
+    })
+}
+
 module.exports.insertOne = insertOne
+module.exports.findBy = findBy
+module.exports.findDupes = findDupes
