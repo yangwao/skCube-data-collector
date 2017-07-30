@@ -6,6 +6,8 @@ I'm using [httpie.org](https://httpie.org)
 
 Commands for server are at [httpie.md](httpie.md)
 
+[Doc of file upload form for httpie ](https://httpie.org/doc#file-upload-forms)
+
 Example of request using httpie
 ```
 ⫸  http -v -f POST :9001/v1/raw sourceCallsign='skCUBE' destinationCallsign='OM3KAA' meta='znacka' gsr@1498683512_OM3KAA__skCUBE.gsr
@@ -51,4 +53,4 @@ destinationCallsign
 meta
 gsr
 ```
-Where gsr is attachment of gsr packet
+Where `gsr` is attachment of gsr packet
