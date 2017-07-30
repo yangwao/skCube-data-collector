@@ -42,9 +42,6 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
   if (req.file.size > config.gsr.file.maxSize) {
     return res.status(400).json({error: 'gsr file too big'})
   }
-  if (!b.timestamp) {
-    return res.status(400).json({error: 'missing timestamp'})
-  }
   if (!b.sourceCallsign) {
     return res.status(400).json({error: 'missing sourceCallsign'})
   }

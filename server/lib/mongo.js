@@ -7,12 +7,13 @@ const mongoUrl = 'mongodb://' +
   '/' + config.mongodb.db
 
 var db
-// const doc = { a: 1 }
-// const col = 'gsr'
 
 let getDbStats = function (db, callback) {
   db.command({'dbStats': 1},
     function (err, results) {
+      if (err) {
+        l.error(err)
+      }
       l.info(results)
       callback()
     }
@@ -27,9 +28,6 @@ MongoClient.connect(mongoUrl, function (err, database) {
   db = database
   l.info('Connected successfully to mongodb')
   getDbStats(db, function () {
-    // insertOne(db, col, doc, function () {
-    //   db.close()
-    // })
   })
 })
 
@@ -39,7 +37,7 @@ let insertOne = function (col, doc, callback) {
     if (err) {
       l.error('insertOne', err)
     }
-    l.info(r)
+
     callback(r)
   })
 }
