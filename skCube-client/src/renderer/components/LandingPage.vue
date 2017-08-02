@@ -18,29 +18,30 @@
           {{ path }}
         </p>
         <p>
-          Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
+          Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
         </p>
         <p>
-          Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
+          Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
         </p>
         <p>
           Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
         </p>
         <p>This data will be joined to request</p>
         <p>
-          {{ packetInfo.meta }}
+          Source {{ packetInfo.sourceCallsign }}
         </p>
         <p>
-          {{ packetInfo.destinationCallsign }}
+          Destination {{ packetInfo.destinationCallsign }}
         </p>
         <p>
-          {{ packetInfo.sourceCallsign }}
+          Meta {{ packetInfo.meta }}
         </p>
         <br>
       </div>
         <div class="doc">
           <button class="alt" v-on:click="sendRaw">Start sending GSR packets</button>
           <button class="alt">Stop sending GSR packets</button>
+          <button class="alt" @click="open(targetViewer + (today - last30days))">Show received packets for last 30 days</button>
         </div>
       </div>
 
@@ -52,6 +53,9 @@
 export default {
   data() {
     return {
+      today: Date.now(),
+      last30days: 1000*60*60*24*30,
+      targetViewer: 'http://localhost:9001/v1/createdAt/',
       targetServer: 'http://localhost:9001/v1/raw',
       path: '',
       packetInfo: {
@@ -116,12 +120,13 @@ export default {
         gsr: fs.createReadStream(this.path)
       }
 
-      request.post({url:this.targetServer, formData: formData}, function optionalCallback(err, httpResponse, body) {
-        if (err) {
-          return console.error('upload failed:', err);
-        }
-        console.log('Server response:', body);
-      });
+      request.post({url:this.targetServer, formData: formData},
+        function optionalCallback(err, httpResponse, body) {
+          if (err) {
+            return console.error('upload failed:', err);
+          }
+          console.log('Server response:', body);
+        });
     }
   }
 }
@@ -146,7 +151,7 @@ body {
     rgba(229, 229, 229, .9) 100%);
     height: 100vh;
     padding: 60px 80px;
-    width: 100vw;
+    width: 150vw;
 }
 
 #logo {

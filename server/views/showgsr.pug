@@ -2,7 +2,8 @@ extends layout
 
 block content
   h1= title
-  p received gsr packets since #{createdAt}
+  p received gsr packets since #{createdAt} 
+  
   ul
     each val in docs
       li= val._id

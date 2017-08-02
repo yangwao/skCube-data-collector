@@ -31,12 +31,15 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: config.pino.name })
 })
 
-router.get('/v1/createdAt/:time', function (req, res, next) {
-  let q = { createdAt: { $gt: parseInt(req.params.time) } }
+router.get('/v1/createdAt/:epochTimeMs', function (req, res, next) {
+  let q = { createdAt: { $gt: parseInt(req.params.epochTimeMs) } }
+  l.info(req.params.epochTimeMs)
+  let humanDate = new Date(parseInt(req.params.epochTimeMs)).toUTCString()
+  l.info('asdsa', humanDate)
   db.find('gsr', q, function (docs) {
     res.render('showgsr', {
       title: config.pino.name,
-      createdAt: req.params.time,
+      createdAt: humanDate,
       rootDir: config.rootDir,
       docs: docs })
   })
