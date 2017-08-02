@@ -1,6 +1,6 @@
-// const ax25 = require('ax25');
-
-// console.log(ax25);
+// IN FISH SHELL ><>
+// set IFS ''
+// node ../build/decode.js (xxd -ps 1498683704_OM3KAA__skCUBE.gsr)
 
 // Make sure we got a filename on the command line.
 if (process.argv.length < 3) {
