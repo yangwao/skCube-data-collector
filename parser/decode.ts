@@ -8,55 +8,85 @@ if (process.argv.length < 3) {
   process.exit(1);
 }
 
+const rawData = process.argv[2];
 
-function fromHexToDec(data: string) {
-    const hex = new RegExp('^[0-9]|[a-f]');
-    const decArray = [];
-    let hexNum: string = '';
-    let decNum: number;
-    let otherData: boolean = false;
-    let lengthOfUsed: number = 0;
-    let i;
+const data = cleanUnwantedData(rawData);
 
-    for (i = 0; i < data.length; i++) {
+const type = findType(data);
+console.log(type);
 
-        if (hex.test(data[i])) {
-            hexNum += `${data[i]}`;   
-            continue; 
-        }
+// fromHexToDec(data);
 
-        if (otherData) {
-            if (data[i] === '\n') {
-                otherData = false;
-            }
-            continue;
-        }
-
-        if (data[i] === '.') {
-            otherData = true;
-            continue;
-        }
-
-        if (hexNum) {
-            if (data[i] === ':') {
-                hexNum = '';
-            } else {
-                decNum = parseInt(hexNum, 16);
-                process.stdout.write(decNum + ' ');   
-                if (decNum > 0) {
-                    lengthOfUsed += 1;
-                }
-                decArray.push(decNum);          
-            }
-            hexNum = '';       
-        }
-    }   
-
-    console.log('\nlength: ', decArray.length);
-    console.log('length used: ', lengthOfUsed - 1);    
-    return decArray;
+function cleanUnwantedData(rawData: string) {
+    const newData = rawData.slice(36);
+    // console.log(newData);
+    return newData;
 }
 
-const data = process.argv[2];
-fromHexToDec(data);
+function findType(data: string) {
+    const n = data.slice(0, 2);
+    switch (n) {
+        case '01':
+            return 'CDHS';
+        case '02':
+            return 'ADCS';
+        case '03':
+            return 'COM';
+        case '04':
+            return 'CAM';
+        case '05':
+            return 'PWR';
+        case '06':
+            return 'EXP';
+        default:
+            throw new Error('invalid type');
+    }
+}
 
+// function fromHexToDec(data: string) {
+//     const hex = new RegExp('^[0-9]|[a-f]');
+//     const decArray = [];
+//     let hexNum: string = '';
+//     let decNum: number;
+//     let otherData: boolean = false;
+//     let lengthOfUsed: number = 0;
+//     let i;
+
+//     for (i = 0; i < data.length; i++) {
+
+//         if (hex.test(data[i])) {
+//             hexNum += `${data[i]}`;
+//             continue;
+//         }
+
+//         if (otherData) {
+//             if (data[i] === '\n') {
+//                 otherData = false;
+//             }
+//             continue;
+//         }
+
+//         if (data[i] === '.') {
+//             otherData = true;
+//             continue;
+//         }
+
+//         if (hexNum) {
+//             if (data[i] === ':') {
+//                 hexNum = '';
+//             } else {
+//                 decNum = parseInt(hexNum, 16);
+//                 process.stdout.write(decNum + ' ');
+//                 if (decNum > 0) {
+//                     lengthOfUsed += 1;
+//                 }
+//                 decArray.push(decNum);
+//             }
+//             hexNum = '';
+//         }
+//     }
+
+//     console.log('\nlength: ', decArray.length);
+//     console.log('length used: ', lengthOfUsed - 1);
+//     return decArray;
+// }
