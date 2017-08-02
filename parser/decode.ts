@@ -8,13 +8,6 @@ if (process.argv.length < 3) {
   process.exit(1);
 }
 
-// Read the file and print its contents.
-// const fs = require('fs')
-// fs.readFile(filename, 'utf8', function(err, data) {
-//   if (err) throw err;
-//   console.log('OK: ' + filename);
-//   console.log(data)
-// });
 
 function fromHexToDec(data: string) {
     const hex = new RegExp('^[0-9]|[a-f]');
@@ -67,4 +60,3 @@ function fromHexToDec(data: string) {
 const data = process.argv[2];
 fromHexToDec(data);
 
-// node ../build/decode.js "$(xxd 1498683704_OM3KAA__skCUBE.gsr)"
