@@ -50,6 +50,12 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
   if (!req.file) {
     return res.status(400).json({error: 'missing gsr attachment'})
   }
+  if (req.file.encoding !== '7bit') {
+    return res.status(400).json({error: 'gsr wrong encoding'})
+  }
+  if (req.file.mimetype !== 'text/plain') {
+    return res.status(400).json({error: 'gsr wrong mimetype'})
+  }
   if (req.file.originalname.length > config.gsr.file.maxLength) {
     return res.status(400).json({error: 'gsr file originalname too long'})
   }
@@ -66,10 +72,16 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
     return res.status(400).json({error: 'missing meta or too long'})
   }
 
-  fs.readFile(CWD + config.gsr.file.storageFolder + '/' + req.file.filename, function (err, data) {
+  fs.readFile(CWD + config.gsr.file.storageFolder + '/' + req.file.filename, 'hex', function (err, data) {
     if (err) {
       l.error('raw-gsr-readFile', err)
     }
+
+    if (data.slice(0, 2) !== 'c0' || data.slice(-2) !== 'c0') {
+      l.error('not-a-gsr-file', req.file.filename)
+      return res.status(400).json({error: 'not a gsr file'})
+    }
+
     const id = req.file.filename.split('_')[0]
     let fileChecksum = checksum(data, 'sha512')
 
