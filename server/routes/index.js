@@ -47,6 +47,7 @@ router.get('/v1/createdAt/:epochTimeMs', function (req, res, next) {
 
 router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
   const b = req.body
+
   if (!req.file) {
     return res.status(400).json({error: 'missing gsr attachment'})
   }
@@ -92,6 +93,7 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
       createdAt: Date.now(),
       meta: b.meta,
       size: req.file.size,
+      ip: req.clientIp,
       callsign: {
         source: b.sourceCallsign,
         destination: b.destinationCallsign
