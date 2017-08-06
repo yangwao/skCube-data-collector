@@ -51,6 +51,7 @@
     }
   },
   "dependencies": {
+    "electron-store": "^1.2.0",
     "form-data": "^2.2.0",
     "request": "^2.81.0",
     "vue": "^2.3.3",
