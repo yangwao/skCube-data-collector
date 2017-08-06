@@ -87,7 +87,7 @@ export default {
           console.log(err)
           return
         }
-        console.log('gsr packet content', data);
+        // console.log('gsr packet content', data);
         this.gsrPacket = data
       })
     },
@@ -107,13 +107,17 @@ export default {
       console.log('using this gsrPath', this.gsrPath);
       var request = require('request')
       var fs = require('fs')
-      var FormData = require('form-data')
-
+      // var FormData = require('form-data')
       var formData = {
         sourceCallsign: this.packetInfo.sourceCallsign,
         destinationCallsign: this.packetInfo.destinationCallsign,
         meta: this.packetInfo.meta,
-        gsr: fs.createReadStream(this.gsrPath)
+        gsr: {
+          value: fs.createReadStream(this.gsrPath),
+          options: {
+            contentType: 'text/plain'
+          }
+        }
       }
 
       request.post({url:this.targetServer, formData: formData},
