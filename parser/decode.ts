@@ -1,25 +1,29 @@
 // IN FISH SHELL ><>
 // set IFS ''
-// node ../build/decode.js (xxd -ps 1498683704_OM3KAA__skCUBE.gsr)
+// node ../parser/build/decode.js (xxd -ps 1498683704_OM3KAA__skCUBE.gsr)
+
+const COMstructure = [8, 4, 4, 2, 2, 4, ...Array(5).fill(4), 2, 2, ...Array(6).fill(4), ...Array(4).fill(2)];
 
 // Make sure we got a filename on the command line.
-if (process.argv.length < 3) {
-  console.log('Usage: node ' + process.argv[1] + ' data');
+if (process.argv.length !== 3) {
+  console.log('Please enter data as 3rd argument');
   process.exit(1);
 }
 
 const rawData = process.argv[2];
 
+
+// add test for head data to filter out wrong data
 const data = cleanUnwantedData(rawData);
-
 const type = findType(data);
+const newDataWithoutType = removeType(data);
 console.log(type);
+const newData = removeNewLines(newDataWithoutType);
 
-// fromHexToDec(data);
+const resultObj = parseByType(newData, COMstructure)
 
 function cleanUnwantedData(rawData: string) {
     const newData = rawData.slice(36);
-    // console.log(newData);
     return newData;
 }
 
@@ -43,50 +47,69 @@ function findType(data: string) {
     }
 }
 
-// function fromHexToDec(data: string) {
-//     const hex = new RegExp('^[0-9]|[a-f]');
-//     const decArray = [];
-//     let hexNum: string = '';
-//     let decNum: number;
-//     let otherData: boolean = false;
-//     let lengthOfUsed: number = 0;
-//     let i;
+function removeType(data: string) {
+    return data.slice(2);
+}
 
-//     for (i = 0; i < data.length; i++) {
+function removeNewLines(data: string) {
+    let newData = '';
+    for (const c of data) {
+        if (c !== '\n') {
+            newData += c
+        }
+    }
+    return newData;
+}
 
-//         if (hex.test(data[i])) {
-//             hexNum += `${data[i]}`;
-//             continue;
-//         }
+function parseByType(data: string, structure: number[]) {
+    console.log(data)
+    const resultArray: any = [];
 
-//         if (otherData) {
-//             if (data[i] === '\n') {
-//                 otherData = false;
-//             }
-//             continue;
-//         }
+    let result: number = null;
+    structure.reduce((i, s) => {
+        const hexNum = data.slice(i, i+s);
+        console.log(hexNum, '\n')
 
-//         if (data[i] === '.') {
-//             otherData = true;
-//             continue;
-//         }
+        // ~~~switch endianness~~~
+        const hexNumLittleEndian = hexNum.match(/../g).reverse().join('');
+        resultArray.push(parseInt(hexNumLittleEndian, 16));
 
-//         if (hexNum) {
-//             if (data[i] === ':') {
-//                 hexNum = '';
-//             } else {
-//                 decNum = parseInt(hexNum, 16);
-//                 process.stdout.write(decNum + ' ');
-//                 if (decNum > 0) {
-//                     lengthOfUsed += 1;
-//                 }
-//                 decArray.push(decNum);
-//             }
-//             hexNum = '';
-//         }
-//     }
+        result = i+s;
+        return i+s;
+    }, 0);
 
-//     console.log('\nlength: ', decArray.length);
-//     console.log('length used: ', lengthOfUsed - 1);
-//     return decArray;
-// }
+    console.log(resultArray)
+
+    const endsWithEndingSign = result && data.slice(result, result + 2) === 'c0';
+
+    if (endsWithEndingSign) {
+        const obj = {
+            Timestamp: '',
+            FW_version: '',
+            Active_COM: '',
+            Digipeater_mode: '',
+            Number_of_reboots: '',
+            Output_reflected_power: '',
+            Output_forward_power: '',
+            Output_reflected_power_CW: '',
+            Output_forward_power_CW: '',
+            RSSI: '',
+            RSSI_noise: '',
+            MCU_Temperature: '',
+            PA_Temperature: '',
+            CW_beacon_sent: '',
+            Packets_sent: '',
+            Correct_packets_received: '',
+            Broken_packet_received: '',
+            COM_protocol_error: '',
+            GS_protocol_error: '',
+            TX_disable_status: '',
+            Orbit_time: '',
+            timeslot_start: '',
+            timeslot_end: '',
+        }
+
+        return obj;
+    }
+    throw new Error('Data are missing the closing sign');
+}
