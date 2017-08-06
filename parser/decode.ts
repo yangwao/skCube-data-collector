@@ -2,7 +2,7 @@
 // set IFS ''
 // node ../parser/build/decode.js (xxd -ps 1498683704_OM3KAA__skCUBE.gsr)
 
-const COMstructure = [8, 4, 4, 2, 2, 4, ...Array(5).fill(4), 2, 2, ...Array(6).fill(4), ...Array(4).fill(2)];
+import { COMStructure, COMObj, ADCSStructure, ADCSObj } from './data-structure';
 
 // Make sure we got a filename on the command line.
 if (process.argv.length !== 3) {
@@ -12,15 +12,33 @@ if (process.argv.length !== 3) {
 
 const rawData = process.argv[2];
 
-
 // add test for head data to filter out wrong data
 const data = cleanUnwantedData(rawData);
 const type = findType(data);
 const newDataWithoutType = removeType(data);
-console.log(type);
 const newData = removeNewLines(newDataWithoutType);
 
-const resultObj = parseByType(newData, COMstructure)
+export type Type = [
+    number,
+    string
+];
+
+switch (type) {
+    case 'CDHS':
+
+    case 'ADCS':
+        console.log(parseByStructure(newData, ADCSStructure, ADCSObj));
+        break;
+    case 'COM':
+        console.log(parseByStructure(newData, COMStructure, COMObj));
+        break;
+    case 'PWR':
+
+    case 'CAM':
+        throw new Error('not supported type');
+    case 'EXP':
+        throw new Error('not supported type');
+}
 
 function cleanUnwantedData(rawData: string) {
     const newData = rawData.slice(36);
@@ -61,55 +79,24 @@ function removeNewLines(data: string) {
     return newData;
 }
 
-function parseByType(data: string, structure: number[]) {
-    console.log(data)
+function parseByStructure(data: string, structure: Type[], obj: object) {
     const resultArray: any = [];
 
     let result: number = null;
-    structure.reduce((i, s) => {
-        const hexNum = data.slice(i, i+s);
-        console.log(hexNum, '\n')
-
+    structure.reduce((sum, s) => {
+        const hexNum = data.slice(sum, sum+s[0]);
+        console.log(hexNum)
         // ~~~switch endianness~~~
         const hexNumLittleEndian = hexNum.match(/../g).reverse().join('');
         resultArray.push(parseInt(hexNumLittleEndian, 16));
 
-        result = i+s;
-        return i+s;
+        result = sum+s[0];
+        return sum+s[0];
     }, 0);
 
-    console.log(resultArray)
-
-    const endsWithEndingSign = result && data.slice(result, result + 2) === 'c0';
-
-    if (endsWithEndingSign) {
-        const obj = {
-            Timestamp: '',
-            FW_version: '',
-            Active_COM: '',
-            Digipeater_mode: '',
-            Number_of_reboots: '',
-            Output_reflected_power: '',
-            Output_forward_power: '',
-            Output_reflected_power_CW: '',
-            Output_forward_power_CW: '',
-            RSSI: '',
-            RSSI_noise: '',
-            MCU_Temperature: '',
-            PA_Temperature: '',
-            CW_beacon_sent: '',
-            Packets_sent: '',
-            Correct_packets_received: '',
-            Broken_packet_received: '',
-            COM_protocol_error: '',
-            GS_protocol_error: '',
-            TX_disable_status: '',
-            Orbit_time: '',
-            timeslot_start: '',
-            timeslot_end: '',
-        }
-
-        return obj;
+    let i = 0;
+    for (let key in obj) {
+        obj[key] = resultArray[i++];
     }
-    throw new Error('Data are missing the closing sign');
+    return obj;
 }
