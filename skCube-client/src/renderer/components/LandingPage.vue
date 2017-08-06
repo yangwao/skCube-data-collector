@@ -12,10 +12,16 @@
         <br>
         <br>
         <p>
-          Selected path:
+          <button class="alt" @click="saveSettings">Save settings</button>
         </p>
         <p>
-          {{ path }}
+          <button class="alt" @click="loadSettings">Load last setting</button>
+        </p>
+        <p>
+          Selected gsrPath:
+        </p>
+        <p>
+          {{ gsrPath }}
         </p>
         <p>
           Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
@@ -25,16 +31,6 @@
         </p>
         <p>
           Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
-        </p>
-        <p>This data will be joined to request</p>
-        <p>
-          Source {{ packetInfo.sourceCallsign }}
-        </p>
-        <p>
-          Destination {{ packetInfo.destinationCallsign }}
-        </p>
-        <p>
-          Meta {{ packetInfo.meta }}
         </p>
         <br>
       </div>
@@ -57,11 +53,11 @@ export default {
       last30days: 1000*60*60*24*30,
       targetViewer: 'http://localhost:9001/v1/createdAt/',
       targetServer: 'http://localhost:9001/v1/raw',
-      path: '',
+      gsrPath: '',
       packetInfo: {
-        meta: 'default meta',
-        sourceCallsign: 'jkl',
-        destinationCallsign: 'iop'
+        meta: '',
+        sourceCallsign: '',
+        destinationCallsign: ''
       },
       counter: 0,
       gsrPacket: ''
@@ -76,7 +72,7 @@ export default {
     openDialogFile: function () {
       const { dialog } = require('electron').remote
       var fs = require('fs')
-      const path = dialog.showOpenDialog({
+      const gsrPath = dialog.showOpenDialog({
         filters: [{
           name: 'Packets',
           extensions: ['gsr']
@@ -84,9 +80,9 @@ export default {
         properties: ['openFile']
       })
 
-      this.path = path[0]
+      this.gsrPath = gsrPath[0]
 
-      fs.readFile(path[0], 'utf-8', (err, data) => {
+      fs.readFile(gsrPath[0], 'utf-8', (err, data) => {
         if (err) {
           console.log(err)
           return
@@ -97,18 +93,18 @@ export default {
     },
     openDialogDir: function () {
       const { dialog } = require('electron').remote
-      const path = dialog.showOpenDialog({
+      const gsrPath = dialog.showOpenDialog({
         filters: [{
           name: 'Packets',
           extensions: ['gsr']
         }],
         properties: ['openDirectory']
       })
-      console.log(path)
-      this.path = path[0]
+      console.log(gsrPath)
+      this.gsrPath = gsrPath[0]
     },
     sendRaw: function() {
-      console.log('using this path', this.path);
+      console.log('using this gsrPath', this.gsrPath);
       var request = require('request')
       var fs = require('fs')
       var FormData = require('form-data')
@@ -117,7 +113,7 @@ export default {
         sourceCallsign: this.packetInfo.sourceCallsign,
         destinationCallsign: this.packetInfo.destinationCallsign,
         meta: this.packetInfo.meta,
-        gsr: fs.createReadStream(this.path)
+        gsr: fs.createReadStream(this.gsrPath)
       }
 
       request.post({url:this.targetServer, formData: formData},
@@ -127,6 +123,18 @@ export default {
           }
           console.log('Server response:', body);
         });
+    },
+    saveSettings: function() {
+      const Store = require('electron-store')
+      const store = new Store()
+      store.set('user.packetInfo', this.packetInfo)
+      store.set('user.gsrPath', this.gsrPath)
+    },
+    loadSettings: function() {
+      const Store = require('electron-store')
+      const store = new Store()
+      this.gsrPath = store.get('user.gsrPath')
+      this.packetInfo = store.get('user.packetInfo')
     }
   }
 }
