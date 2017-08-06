@@ -6,7 +6,7 @@
       <div class="doc">
         <div class="title">Getting Started</div>
         <p>
-              Select your folder where GSR files are created and we will do the rest
+              Select your folder where GSR files are created and we will do the rest (patrol every 60 seconds for new GSR packets in directory and send it to collector server)
         </p>
         <button v-on:click="openDialogFile">Choose folder</button>
         <br>
@@ -36,6 +36,9 @@
       </div>
         <div class="doc">
           <button class="alt" v-on:click="sendRaw">Start sending GSR packets</button>
+          <p>
+            server status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }}
+          </p>
           <button class="alt">Stop sending GSR packets</button>
           <button class="alt" @click="open(targetViewer + (today - last30days))">Show received packets for last 30 days</button>
         </div>
@@ -60,7 +63,12 @@ export default {
         destinationCallsign: ''
       },
       counter: 0,
-      gsrPacket: ''
+      gsrPacket: '',
+      serverReply: {
+        status: '-',
+        seen: '-',
+        timestamp: '-'
+      }
     }
   },
   name: 'landing-page',
@@ -107,7 +115,6 @@ export default {
       console.log('using this gsrPath', this.gsrPath);
       var request = require('request')
       var fs = require('fs')
-      // var FormData = require('form-data')
       var formData = {
         sourceCallsign: this.packetInfo.sourceCallsign,
         destinationCallsign: this.packetInfo.destinationCallsign,
@@ -121,11 +128,18 @@ export default {
       }
 
       request.post({url:this.targetServer, formData: formData},
-        function optionalCallback(err, httpResponse, body) {
+        (err, httpResponse, body) => {
           if (err) {
             return console.error('upload failed:', err);
           }
+
           console.log('Server response:', body);
+          this.serverReply = JSON.parse(body)
+          this.serverReply.timestamp = new Date()
+
+          if (!this.serverReply.seen) {
+            this.serverReply.seen = 'unique!'
+          }
         });
     },
     saveSettings: function() {
