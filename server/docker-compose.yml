@@ -24,3 +24,5 @@ services:
       options:
         max-size: "100M"
         max-file: "2"
+    volumes:
+      - ./gsrStorage:/src/gsrStorage
