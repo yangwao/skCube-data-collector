@@ -8,7 +8,8 @@
         <p>
               Select your folder where GSR files are created and we will do the rest (patrol every 60 seconds for new GSR packets in directory and send it to collector server)
         </p>
-        <button v-on:click="openDialogFile">Choose folder</button>
+        <button @click="openDialogFile">Choose file</button>
+        <button @click="openDialogDir">Choose folder</button>
         <br>
         <br>
         <p>
@@ -35,11 +36,11 @@
         <br>
       </div>
         <div class="doc">
-          <button class="alt" v-on:click="sendRaw">Start sending GSR packets</button>
+          <button class="alt" @click="sendRaw">Start sending GSR packets</button>
           <p>
             server status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }}
           </p>
-          <button class="alt">Stop sending GSR packets</button>
+          <button class="alt" @click="patrolForGsr">Patrol for new GSR</button>
           <button class="alt" @click="open(targetViewer + (today - last30days))">Show received packets for last 30 days</button>
         </div>
       </div>
@@ -79,7 +80,6 @@ export default {
     },
     openDialogFile: function () {
       const { dialog } = require('electron').remote
-      var fs = require('fs')
       const gsrPath = dialog.showOpenDialog({
         filters: [{
           name: 'Packets',
@@ -89,15 +89,15 @@ export default {
       })
 
       this.gsrPath = gsrPath[0]
-
-      fs.readFile(gsrPath[0], 'utf-8', (err, data) => {
-        if (err) {
-          console.log(err)
-          return
-        }
-        // console.log('gsr packet content', data);
-        this.gsrPacket = data
-      })
+      // var fs = require('fs')
+      // fs.readFile(gsrPath[0], 'utf-8', (err, data) => {
+      //   if (err) {
+      //     console.log(err)
+      //     return
+      //   }
+      //   // console.log('gsr packet content', data);
+      //   this.gsrPacket = data
+      // })
     },
     openDialogDir: function () {
       const { dialog } = require('electron').remote
@@ -153,6 +153,17 @@ export default {
       const store = new Store()
       this.gsrPath = store.get('user.gsrPath')
       this.packetInfo = store.get('user.packetInfo')
+    },
+    patrolForGsr: function() {
+      var fs = require('fs')
+      fs.watch(this.gsrPath, (eventType, filename) => {
+        console.log(`event type is: ${eventType}`);
+        if (filename) {
+          console.log(`filename provided: ${filename}`);
+        } else {
+          console.log('filename not provided');
+        }
+      })
     }
   }
 }
