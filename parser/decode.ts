@@ -81,14 +81,25 @@ function removeNewLines(data: string) {
 
 function parseByStructure(data: string, structure: Type[], obj: object) {
     const resultArray: any = [];
-
     let result: number = null;
+
     structure.reduce((sum, s) => {
-        const hexNum = data.slice(sum, sum+s[0]);
+        let hexNum = data.slice(sum, sum+s[0]);
         console.log(hexNum)
+
         // ~~~switch endianness~~~
         const hexNumLittleEndian = hexNum.match(/../g).reverse().join('');
-        resultArray.push(parseInt(hexNumLittleEndian, 16));
+
+        let num = parseInt(hexNumLittleEndian, 16);
+
+        if (s[1] === 'signed') {
+            const maxVal = Math.pow(2, hexNum.length / 2 * 8);
+            if (num > maxVal / 2 - 1) {
+                num = num - maxVal
+            }
+        }
+
+        resultArray.push(num);
 
         result = sum+s[0];
         return sum+s[0];
