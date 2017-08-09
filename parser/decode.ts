@@ -12,7 +12,7 @@ if (process.argv.length !== 3) {
 
 const rawData = process.argv[2];
 
-// add test for head data to filter out wrong data
+// TODO: add test for head data to filter out wrong packets
 const data = cleanUnwantedData(rawData);
 const type = findType(data);
 const newDataWithoutType = removeType(data);
