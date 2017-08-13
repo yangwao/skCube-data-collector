@@ -44,10 +44,11 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "target" : "portable",
+      "target": "portable",
       "icon": "build/icons/icon.ico"
     },
     "linux": {
+      "target": "AppImage", 
       "icon": "build/icons"
     }
   },
