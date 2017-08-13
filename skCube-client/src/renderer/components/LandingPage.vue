@@ -153,7 +153,7 @@ export default {
 
           if (this.serverReply.status === 'ok') {
             let gsrFilename = this.gsrPath.file.split('/')[this.gsrPath.file.split('/').length-1]
-            console.log('moving', gsrFilename);
+            console.log(`moving ${gsrFilename} to sendDir`);
             fs.renameSync(this.gsrPath.file, this.gsrPath.dir + '/' + this.gsrPath.sentDir + gsrFilename)
           }
         });
@@ -173,7 +173,14 @@ export default {
     patrolForGsr: function() {
       var fs = require('fs')
       if (!fs.existsSync(this.gsrPath.dir + '/' + this.gsrPath.sentDir)) {
+        console.log('will create sentDir')
         fs.mkdirSync(this.gsrPath.dir + '/' + this.gsrPath.sentDir)
+      }
+
+      this.listFilesFromDir()
+      if(this.gsrPath.toBeSentFiles[0]) {
+        this.gsrPath.file = this.gsrPath.dir + '/' + this.gsrPath.toBeSentFiles[0]
+        this.sendRaw()
       }
 
       fs.watch(this.gsrPath.dir, (eventType, filename) => {
