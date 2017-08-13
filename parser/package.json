@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "description": "data from 🛰 space",
   "main": "index.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^8.0.7",
     "typescript": "^2.4.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
