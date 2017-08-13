@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "data from 🛰 space",
   "main": "index.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^8.0.7",
     "typescript": "^2.4.1"
