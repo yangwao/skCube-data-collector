@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build:parser": "cd ../parser;npm i;npm run build",
     "start": "nodemon ./bin/www",
     "test": "standard"
   },
