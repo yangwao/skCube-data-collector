@@ -18,7 +18,7 @@
   },
   "build": {
     "productName": "skcube-client",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "sk.sosa.skcube-client",
     "directories": {
       "output": "build"
     },
@@ -44,6 +44,7 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
+      "target" : "portable",
       "icon": "build/icons/icon.ico"
     },
     "linux": {
