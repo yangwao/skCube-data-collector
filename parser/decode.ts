@@ -2,7 +2,7 @@
 // set IFS ''
 // node ../parser/build/decode.js (xxd -ps 1498683704_OM3KAA__skCUBE.gsr)
 
-import { COMStructure, COMObj, ADCSStructure, ADCSObj } from './data-structure';
+import { COMStructure, COMObj, ADCSStructure, ADCSObj, PWRStructure, PWRObj, CDHSStructure, CDHSObj } from './data-structure';
 
 // Make sure we got a filename on the command line.
 if (process.argv.length !== 3) {
@@ -25,7 +25,8 @@ export type Type = [
 
 switch (type) {
     case 'CDHS':
-
+        console.log(parseByStructure(newData, CDHSStructure, CDHSObj));
+        break;
     case 'ADCS':
         console.log(parseByStructure(newData, ADCSStructure, ADCSObj));
         break;
@@ -33,11 +34,12 @@ switch (type) {
         console.log(parseByStructure(newData, COMStructure, COMObj));
         break;
     case 'PWR':
-
+        console.log(parseByStructure(newData, PWRStructure, PWRObj));
+        break;
     case 'CAM':
-        throw new Error('not supported type');
+        throw new Error('Not supported type');
     case 'EXP':
-        throw new Error('not supported type');
+        throw new Error('Not supported type');
 }
 
 function cleanUnwantedData(rawData: string) {
