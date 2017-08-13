@@ -43,7 +43,7 @@
     Earth sensor Y+
     Earth sensor Y-`;
 
-    const dataArray = data.split('\n');
+    const dataArray = data.replace(/^\s+/gm, '').trim().split('\n');
 
     function camelize(str: string) {
     return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
