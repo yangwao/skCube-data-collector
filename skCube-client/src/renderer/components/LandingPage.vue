@@ -58,6 +58,7 @@ export default {
       targetViewer: 'http://localhost:9001/v1/createdAt/',
       targetServer: 'http://localhost:9001/v1/raw',
       gsrPath: '',
+      sentDir: 'sent/',
       packetInfo: {
         meta: '',
         sourceCallsign: '',
@@ -156,6 +157,10 @@ export default {
     },
     patrolForGsr: function() {
       var fs = require('fs')
+      if (!fs.existsSync(this.gsrPath + '/' + this.sentDir)) {
+        fs.mkdirSync(this.gsrPath + '/' + this.sentDir)
+      }
+
       fs.watch(this.gsrPath, (eventType, filename) => {
         console.log(`event type is: ${eventType}`);
         if (filename) {
