@@ -45,6 +45,9 @@
           <p>
             last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
           </p>
+          <p>
+            targetServer {{ targetServer }} version {{ this.appVersion }}
+          </p>
         </div>
       </div>
 
@@ -53,13 +56,16 @@
 </template>
 
 <script>
+import {version} from '../../../package.json'
 export default {
   data() {
     return {
       today: Date.now(),
       last30days: 1000*60*60*24*30,
-      targetViewer: 'http://localhost:9001/v1/createdAt/',
-      targetServer: 'http://localhost:9001/v1/raw',
+      // targetViewer: 'http://localhost:9001/v1/createdAt/',
+      // targetServer: 'http://localhost:9001/v1/raw',
+      targetViewer: 'http://collector.hypersignal.xyz:9001/v1/createdAt/',
+      targetServer: 'http://collector.hypersignal.xyz:9001/v1/raw',
       gsrPath: {
         sentDir: 'sent/',
         dir: '',
@@ -68,9 +74,9 @@ export default {
       },
       gsrFilename: '',
       packetInfo: {
-        meta: '',
-        sourceCallsign: '',
-        destinationCallsign: ''
+        meta: 'null',
+        sourceCallsign: 'OM9SAT',
+        destinationCallsign: '00000'
       },
       counter: 0,
       gsrPacket: '',
@@ -78,7 +84,8 @@ export default {
         status: '-',
         seen: '-',
         timestamp: '-'
-      }
+      },
+      appVersion: require('electron').remote.app.getVersion()
     }
   },
   name: 'landing-page',

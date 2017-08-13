@@ -23,10 +23,10 @@ let getDbStats = function (db, cb) {
 l.info('Mongodb @', config.mongodb.host)
 MongoClient.connect(mongoUrl, function (err, database) {
   if (err) {
-    l.error('Could not connect to mongodb')
+    l.error('Could not connect to Mongodb')
   }
   db = database
-  l.info('Connected successfully to mongodb')
+  l.info('Connected successfully to Mongodb')
   getDbStats(db, function () {
   })
 })
