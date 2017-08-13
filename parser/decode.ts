@@ -28,13 +28,13 @@ export function parseGsrData(rawData: string) {
 
     switch (type) {
         case 'CDHS':
-            return parseByStructure(newData, CDHSStructure, CDHSObj);
+            return [type, parseByStructure(newData, CDHSStructure, CDHSObj)];
         case 'ADCS':
-            return parseByStructure(newData, ADCSStructure, ADCSObj);
+            return [type, parseByStructure(newData, ADCSStructure, ADCSObj)];
         case 'COM':
-            return parseByStructure(newData, COMStructure, COMObj);
+            return [type, parseByStructure(newData, COMStructure, COMObj)];
         case 'PWR':
-            return parseByStructure(newData, PWRStructure, PWRObj);
+            return [type, parseByStructure(newData, PWRStructure, PWRObj)];
         case 'CAM':
             throw new Error('CAM is not supported type');
         case 'EXP':
