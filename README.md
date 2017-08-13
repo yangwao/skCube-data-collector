@@ -1,6 +1,8 @@
 # skCube-data-collector
 data from 🛰 🌌 space
 
+![img](https://travis-ci.org/yangwao/skCube-data-collector.svg?branch=master)
+
 # api
 [Writing your own client? Here is api documentation](server/README.md)
 

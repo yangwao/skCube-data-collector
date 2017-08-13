@@ -1,7 +1,8 @@
 # skcube-client
 
-> gathering gsr data to server
+> sending gsr data to server
 
+![img](skcube-screenshot.png)
 #### Build Setup
 
 ``` bash

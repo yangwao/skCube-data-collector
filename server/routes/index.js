@@ -47,7 +47,7 @@ router.get('/v1/createdAt/:epochTimeMs', function (req, res, next) {
 
 router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
   const b = req.body
-  l.info(req.file.mimetype)
+
   if (!req.file) {
     l.warn(`${req.clientIp} - gsr missing`)
     return res.status(400).json({error: 'missing gsr attachment'})
@@ -112,6 +112,7 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
       if (dupe.value !== null &&
         dupe.value.hasOwnProperty('checksum') &&
         dupe.value.checksum === doc.checksum) {
+        l.info(`${req.clientIp} - ${req.file.size}B - seen: ${dupe.value.seen}`)
         res.status(200).json({
           _id: dupe.value._id,
           checksum: dupe.value.checksum,
@@ -122,6 +123,7 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
       }
       if (dupe.value === null) {
         db.insertOne('gsr', doc, function (cb) {
+          l.info(`${req.clientIp} - ${req.file.size}B - unique packet`)
           res.status(201).json({
             _id: id,
             checksum: fileChecksum,
