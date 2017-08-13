@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import {version} from '../../../package.json'
 export default {
   data() {
     return {
@@ -215,6 +214,7 @@ export default {
 </script>
 
 <style>
+@import "~bulma/css/bulma.css";
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
 * {
