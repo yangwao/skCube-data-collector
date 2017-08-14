@@ -10,7 +10,7 @@ matrix:
     compiler: clang
 cache:
   directories:
-  - node_modules
+  - skCube-client/node_modules
   - "$HOME/.electron"
   - "$HOME/.cache"
 addons:
