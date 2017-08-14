@@ -2,6 +2,11 @@
 data from 🛰 🌌 space
 
 ![img](https://travis-ci.org/yangwao/skCube-data-collector.svg?branch=master)
+[Travis-ci](https://travis-ci.org/yangwao/skCube-data-collector)
+[Appveyor](https://ci.appveyor.com/project/yangwao/skcube-data-collector)
+
+## Built app images
+[Downloads for Linux, Mac OSX and Windows](https://github.com/yangwao/skCube-data-collector/releases) could be found in releases
 
 # api
 [Writing your own client? Here is api documentation](server/README.md)
@@ -38,7 +43,7 @@ How to read `.gsr` files
 ### ROADMAP
 - [x] send .gsr from client (wao)
 - [x] store .gsr on server w/ callsign, timestamp, tag (wao)
-- 10% parse .gsr (hex->dec) at server (ewe)
+- [x] parse .gsr (hex->dec) at server (ewe)
 - store parsed .gsr to the db
 - data explorer for parsed data fetched from db (~ [OpenMCT](https://nasa.github.io/openmct/))
 
