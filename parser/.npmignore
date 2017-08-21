@@ -1,0 +1,11 @@
+build/create-obj.js
+build/create-obj.d.ts
+build/create-obj.js.map
+build/create-struct.js
+build/create-struct.d.ts
+build/create-struct.js.map
+create-obj.ts
+create-struct.ts
+data-structure.ts
+decode.ts
+tsconfig.json
