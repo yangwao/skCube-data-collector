@@ -1,8 +1,9 @@
 {
   "name": "gsr-parser",
   "version": "1.0.0",
-  "description": "data from 🛰 space",
-  "main": "index.js",
+  "description": "Parser for GSR packets, supports CDHS, PWR, ADCS and COM packet types.",
+  "main": "build/decode.js",
+  "typings": "build/decode.d.ts",
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^8.0.7",
@@ -11,7 +12,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsc -w",
-    "build": "tsc"
+    "build": "tsc --declaration"
   },
   "repository": {
     "type": "git",
