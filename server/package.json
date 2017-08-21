@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build:parser": "cd ../parser;npm i;npm run build",
     "start": "nodemon ./bin/www",
     "test": "standard"
   },
@@ -14,6 +15,7 @@
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "express-pino-logger": "^2.0.0",
+    "gsr-parser": "^1.0.0",
     "mongodb": "^2.2.29",
     "morgan": "~1.8.1",
     "multer": "^1.3.0",

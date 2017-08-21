@@ -12,12 +12,10 @@ import { COMStructure, COMObj, ADCSStructure, ADCSObj, PWRStructure, PWRObj, CDH
 
 // const rawData = process.argv[2];
 
-// export type Type = [
-//     number,
-//     string
-// ];
-
-// console.log(parseGsrData(rawData));
+export type Type = [
+    number,
+    string
+];
 
 export function parseGsrData(rawData: string) {
     // TODO: add test for head data to filter out wrong packets

@@ -8,6 +8,8 @@ const db = require('../lib/mongo')
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
+const decoder = require('gsr-parser').parseGsrData
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, CWD + config.gsr.file.storageFolder)
@@ -90,6 +92,8 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
       l.error('not-a-gsr-file', req.file.filename)
       return res.status(400).json({error: 'not a gsr file'})
     }
+
+    l.info(decoder(data))
 
     const id = req.file.filename.split('_')[0]
     let fileChecksum = checksum(data, 'sha512')

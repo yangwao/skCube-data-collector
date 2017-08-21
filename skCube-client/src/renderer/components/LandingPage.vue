@@ -45,6 +45,9 @@
           <p>
             last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
           </p>
+          <p>
+            targetServer {{ targetServer }} version {{ this.appVersion }}
+          </p>
         </div>
       </div>
 
@@ -58,8 +61,10 @@ export default {
     return {
       today: Date.now(),
       last30days: 1000*60*60*24*30,
-      targetViewer: 'http://localhost:9001/v1/createdAt/',
-      targetServer: 'http://localhost:9001/v1/raw',
+      // targetViewer: 'http://localhost:9001/v1/createdAt/',
+      // targetServer: 'http://localhost:9001/v1/raw',
+      targetViewer: 'http://collector.hypersignal.xyz:9001/v1/createdAt/',
+      targetServer: 'http://collector.hypersignal.xyz:9001/v1/raw',
       gsrPath: {
         sentDir: 'sent/',
         dir: '',
@@ -68,9 +73,9 @@ export default {
       },
       gsrFilename: '',
       packetInfo: {
-        meta: '',
-        sourceCallsign: '',
-        destinationCallsign: ''
+        meta: 'null',
+        sourceCallsign: 'OM9SAT',
+        destinationCallsign: '00000'
       },
       counter: 0,
       gsrPacket: '',
@@ -78,7 +83,8 @@ export default {
         status: '-',
         seen: '-',
         timestamp: '-'
-      }
+      },
+      appVersion: require('electron').remote.app.getVersion()
     }
   },
   name: 'landing-page',
@@ -153,7 +159,7 @@ export default {
 
           if (this.serverReply.status === 'ok') {
             let gsrFilename = this.gsrPath.file.split('/')[this.gsrPath.file.split('/').length-1]
-            console.log('moving', gsrFilename);
+            console.log(`moving ${gsrFilename} to sendDir`);
             fs.renameSync(this.gsrPath.file, this.gsrPath.dir + '/' + this.gsrPath.sentDir + gsrFilename)
           }
         });
@@ -173,7 +179,14 @@ export default {
     patrolForGsr: function() {
       var fs = require('fs')
       if (!fs.existsSync(this.gsrPath.dir + '/' + this.gsrPath.sentDir)) {
+        console.log('will create sentDir')
         fs.mkdirSync(this.gsrPath.dir + '/' + this.gsrPath.sentDir)
+      }
+
+      this.listFilesFromDir()
+      if(this.gsrPath.toBeSentFiles[0]) {
+        this.gsrPath.file = this.gsrPath.dir + '/' + this.gsrPath.toBeSentFiles[0]
+        this.sendRaw()
       }
 
       fs.watch(this.gsrPath.dir, (eventType, filename) => {
@@ -201,6 +214,7 @@ export default {
 </script>
 
 <style>
+@import "~bulma/css/bulma.css";
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
 * {
