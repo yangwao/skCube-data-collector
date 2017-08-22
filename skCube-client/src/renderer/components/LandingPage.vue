@@ -4,24 +4,25 @@
   <main>
     <div class="left-side">
       <div class="doc">
-        <div class="title">Getting Started</div>
+        <div class="title">How to send your packets:</div>
         <p>
-          Select your folder where GSR files are created and we will do the rest. We will watch for new GSR packets in directory and send it to collector server)
+          Select folder where you store your GSR files and we will do the rest. </br>We will also watch for new GSR packets in that directory.
         </p>
         <p>
-          <button @click="openDialogDir">Choose folder</button>
-          <button class="alt" @click="patrolForGsr">Start watching for GSR packets</button>
+          <button @click="openDialogDir">
+            <i class="fa fa-folder"></i>
+            Choose folder
+          </button>
+          <button class="alt" @click="patrolForGsr" v-if="!!this.gsrPath.dir">Start watching for GSR packets</button>
         </p>
         <p>
-          <button class="alt" @click="loadSettings">Load last setting</button>
+          <button class="alt" @click="loadSettings" v-if="isSettingsStore()">Load last settings</button>
           <button class="alt" @click="saveSettings">Save settings</button>
         </p>
         <p>
-        <p>
-          <button class="alt" @click="open(targetViewer + (today - last30days))">Show received packets for last 30 days</button>
+          <a @click="toggleAdvancedUser">Advanced users</a>
         </p>
-          === Advanced users ===
-        </p>
+        <template v-if="this.isAdvancedUser">
         <p>
           Selected gsrDirPath: {{ gsrPath.dir }}
         </p>
@@ -34,20 +35,33 @@
         <p>
           Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
         </p>
+        </template>
         <br>
       </div>
         <div class="doc">
-          <button @click="openDialogFile">Choose file</button>
-          <button class="alt" @click="sendRaw">Send single GSR packet</button>
-          <p>
+          <button @click="openDialogFile">
+            <i class="fa fa-file"></i>
+            Choose file
+          </button>
+          <button class="alt" @click="sendRaw" v-if="!!this.gsrPath.file">Send single GSR packet</button>
+          <p v-if="!!this.gsrPath.file">
             Selected gsrFilePath: {{ gsrPath.file }}
           </p>
-          <p>
-            last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
-          </p>
-          <p>
-            targetServer {{ targetServer }} version {{ this.appVersion }}
-          </p>
+          </br>
+          </br>
+           <div class="server-info-min-width-750">
+            <p>
+              <a class="alt" @click="open(targetViewer + (today - last30days))">
+                Show received packets for last 30 days<span class="icon"><i class="fa fa-external-link"></i></span>
+              </a>
+            </p>
+            <p>
+              last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
+            </p>
+            <p>
+              targetServer {{ targetServer }} version {{ this.appVersion }}
+            </p>
+           </div>
         </div>
       </div>
 
@@ -84,6 +98,7 @@ export default {
         seen: '-',
         timestamp: '-'
       },
+      isAdvancedUser: false,
       appVersion: require('electron').remote.app.getVersion()
     }
   },
@@ -176,6 +191,14 @@ export default {
       this.gsrPath = store.get('user.gsrPath')
       this.packetInfo = store.get('user.packetInfo')
     },
+    isSettingsStore: function() {
+      const Store = require('electron-store')
+      const store = new Store()
+      if (store.get('user.gsrPath') || store.get('user.packetInfo')) {
+        return true
+      }
+      return false
+    },
     patrolForGsr: function() {
       var fs = require('fs')
       if (!fs.existsSync(this.gsrPath.dir + '/' + this.gsrPath.sentDir)) {
@@ -208,78 +231,78 @@ export default {
       var fs = require('fs')
       this.gsrPath.toBeSentFiles = fs.readdirSync(this.gsrPath.dir).filter(gsr => gsr.split('.')[1] === 'gsr')
       console.log(this.gsrPath.toBeSentFiles)
+    },
+    toggleAdvancedUser: function() {
+      this.isAdvancedUser = !this.isAdvancedUser
     }
   }
 }
 </script>
 
-<style>
+<style lang="sass">
 @import "~bulma/css/bulma.css";
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+*
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 
-body {
+body
     font-family: 'Source Sans Pro', sans-serif;
-}
 
-#wrapper {
-    background: radial-gradient( ellipse at top left,
-    rgba(255, 255, 255, 1) 40%,
-    rgba(229, 229, 229, .9) 100%);
+
+#wrapper
+    background: radial-gradient( ellipse at top left, rgba(255, 255, 255, 1) 40%, rgba(229, 229, 229, .9) 100%);
     height: 100vh;
     padding: 60px 80px;
     width: 150vw;
-}
 
-#logo {
+
+#logo
     height: auto;
     margin-bottom: 20px;
     width: 200px;
-}
 
-main {
+
+main
     display: flex;
     justify-content: space-between;
-}
 
-main>div {
+
+main>div
     flex-basis: 50%;
-}
 
-.left-side {
+
+.left-side
     display: flex;
     flex-direction: column;
-}
 
-.welcome {
+
+.welcome
     color: #555;
     font-size: 23px;
     margin-bottom: 10px;
-}
 
-.title {
+
+.title
     color: #2c3e50;
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 6px;
-}
 
-.title.alt {
+
+.title.alt
     font-size: 18px;
     margin-bottom: 10px;
-}
 
-.doc p {
+
+.doc p
     color: black;
     margin-bottom: 10px;
-}
 
-.doc button {
+
+.doc button
     font-size: .8em;
     cursor: pointer;
     outline: none;
@@ -291,10 +314,25 @@ main>div {
     transition: all 0.15s ease;
     box-sizing: border-box;
     border: 1px solid #4fc08d;
-}
 
-.doc button.alt {
+
+.doc button.alt
     color: #42b983;
     background-color: transparent;
-}
+
+
+.fa
+  font-size: 13px !important;
+
+
+.icon
+  margin: auto;
+
+
+.server-info-min-width-750
+  position: absolute;
+  bottom: 3px;
+  left: 15px;
+
+
 </style>
