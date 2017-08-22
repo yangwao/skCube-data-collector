@@ -19,6 +19,19 @@
           </div>
           <div>
             <button class="alt" @click="patrolForGsr" v-if="!!this.gsrPath.dir">Start watching for GSR packets</button>
+            <div v-if="!!this.isWatching">
+            <p>
+              Watching <br>
+              <!--LOADING ANIMATION-->
+              <span class="load-3">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+              </span>
+            <!--END OF LOADING ANIMATION-->
+            </p>
+
+            </div>
             <p v-if="!!this.gsrPath.dir">
               Selected gsrDirPath: {{ gsrPath.dir }}
             </p>
@@ -32,7 +45,7 @@
           </div>
           <div>
             <button class="alt" @click="sendRaw" v-if="!!this.gsrPath.file">Send single GSR packet</button>
-            <p v-if="!!this.gsrPath.file">
+            <p v-if="!!this.gsrPath.file && !this.isWatching">
               Selected gsrFilePath: {{ gsrPath.file }}
             </p>
           </div>
@@ -113,6 +126,7 @@ export default {
         timestamp: '-'
       },
       isAdvancedUser: false,
+      isWatching: false,
       appVersion: require('electron').remote.app.getVersion()
     }
   },
@@ -232,6 +246,8 @@ export default {
         this.gsrPath.file = this.gsrPath.dir + '/' + this.gsrPath.toBeSentFiles[0]
         this.sendRaw()
       }
+
+      this.isWatching = true;
 
       fs.watch(this.gsrPath.dir, (eventType, filename) => {
         console.log(`event type is: ${eventType}`);
@@ -372,5 +388,29 @@ hr
   padding-left: 20px;
   padding-bottom: 15px;
   padding-top: 0;
+
+  //ANIMATIONS
+.line
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 15px;
+  background-color: #1e5ba8;
+  padding: 0;
+
+.load-3 .line:nth-last-child(1)
+  animation: loadingC .9s .10s linear infinite;
+.load-3 .line:nth-last-child(2)
+  animation: loadingC .9s .30s linear infinite;
+.load-3 .line:nth-last-child(3)
+  animation: loadingC .9s .50s linear infinite;
+
+.load-3
+  display: inline-block;
+
+@keyframes loadingC
+  0 {transform: translate(0,0);}
+  50% {transform: translate(0,13px);}
+  100% {transform: translate(0,0);}
 
 </style>
