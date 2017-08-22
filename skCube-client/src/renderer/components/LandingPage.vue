@@ -1,77 +1,94 @@
 <template>
-<div id="wrapper">
-  <img id="logo" src="~@/assets/sk-cube-rr.png" alt="skcube">
-  <main>
-    <div class="left-side">
-      <div class="doc">
-        <div class="title">How to send your packets:</div>
-        <p>
-          Select folder where you store your GSR files and we will do the rest. </br>We will also watch for new GSR packets in that directory.
-        </p>
-        <p>
-          <button @click="openDialogDir">
-            <i class="fa fa-folder"></i>
-            Choose folder
-          </button>
-          <button class="alt" @click="patrolForGsr" v-if="!!this.gsrPath.dir">Start watching for GSR packets</button>
-        </p>
-        <p>
-          <button class="alt" @click="loadSettings" v-if="isSettingsStore()">Load last settings</button>
-          <button class="alt" @click="saveSettings">Save settings</button>
-        </p>
-        <p>
-          <a @click="toggleAdvancedUser">Advanced users</a>
-        </p>
-        <template v-if="this.isAdvancedUser">
-        <p>
-          Selected gsrDirPath: {{ gsrPath.dir }}
-        </p>
-        <p>
-          Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
-        </p>
-        <p>
-          Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
-        </p>
-        <p>
-          Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
-        </p>
-        </template>
-        <br>
-      </div>
+<div>
+  <section class="section main">
+    <section class="section">
+      <img id="logo" src="~@/assets/sk-cube-rr.png" alt="skcube">
+    </section>
+    <section class="section">
+      <div class="left-side">
         <div class="doc">
-          <button @click="openDialogFile">
-            <i class="fa fa-file"></i>
-            Choose file
-          </button>
-          <button class="alt" @click="sendRaw" v-if="!!this.gsrPath.file">Send single GSR packet</button>
-          <p v-if="!!this.gsrPath.file">
-            Selected gsrFilePath: {{ gsrPath.file }}
+          <div class="title">How to send your packets:</div>
+          <p>
+            Select folder where you store your GSR files and we will do the rest. </br>We will also watch for new GSR packets in that directory.
           </p>
-          </br>
-          </br>
-           <div class="server-info-min-width-750">
+          <div>
+            <button @click="openDialogDir">
+              <i class="fa fa-folder"></i>
+              Choose folder
+            </button>
+          </div>
+          <div>
+            <button class="alt" @click="patrolForGsr" v-if="!!this.gsrPath.dir">Start watching for GSR packets</button>
+            <p v-if="!!this.gsrPath.dir">
+              Selected gsrDirPath: {{ gsrPath.dir }}
+            </p>
+          </div>
+          <div class="separator"></div>
+          <div>
+            <button @click="openDialogFile">
+              <i class="fa fa-file"></i>
+              Choose file
+            </button>
+          </div>
+          <div>
+            <button class="alt" @click="sendRaw" v-if="!!this.gsrPath.file">Send single GSR packet</button>
+            <p v-if="!!this.gsrPath.file">
+              Selected gsrFilePath: {{ gsrPath.file }}
+            </p>
+          </div>
+          <div class="separator"></div>
+          <div>
             <p>
-              <a class="alt" @click="open(targetViewer + (today - last30days))">
-                Show received packets for last 30 days<span class="icon"><i class="fa fa-external-link"></i></span>
-              </a>
+              <button class="alt" @click="loadSettings" v-if="isSettingsStore()">Load last settings</button>
+              <button class="alt" @click="saveSettings">Save settings</button>
+            </p>
+          </div>
+          <div class="separator"></div>
+          <p>
+            <a @click="toggleAdvancedUser">Advanced users<span class="icon"><i class="fa fa-hand-pointer-o"></i></span></a>
+          </p>
+          <div class="advanced-settings" v-if="this.isAdvancedUser">
+            <p>
+              Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
             </p>
             <p>
-              last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
+              Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
             </p>
             <p>
-              targetServer {{ targetServer }} version {{ this.appVersion }}
+              Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
             </p>
-           </div>
+          </div>
         </div>
       </div>
-
-  </main>
+    </section>
+  </section>
+  <!--ABSOLUTE POSITION-->
+  <div class="server-info">
+    <div class="separator"></div>
+    <p>
+      <a class="alt" @click="open(targetViewer + (today - last30days))">
+        Show received packets for last 30 days<span class="icon"><i class="fa fa-external-link"></i></span>
+      </a>
+    </p>
+    <p>
+      last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
+    </p>
+    <p>
+      targetServer {{ targetServer }} version {{ this.appVersion }}
+    </p>
+  </div>
+  <!--END OF ABSOLUTE POSITION-->
 </div>
 </template>
 
 <script>
 export default {
   data() {
+    const defaultPacketInfo = {
+      meta: 'null',
+      sourceCallsign: 'OM9SAT',
+      destinationCallsign: '00000'
+    }
     return {
       today: Date.now(),
       last30days: 1000*60*60*24*30,
@@ -86,11 +103,8 @@ export default {
         toBeSentFiles: []
       },
       gsrFilename: '',
-      packetInfo: {
-        meta: 'null',
-        sourceCallsign: 'OM9SAT',
-        destinationCallsign: '00000'
-      },
+      defaultPacketInfo,
+      packetInfo: defaultPacketInfo,
       counter: 0,
       gsrPacket: '',
       serverReply: {
@@ -190,6 +204,13 @@ export default {
       const store = new Store()
       this.gsrPath = store.get('user.gsrPath')
       this.packetInfo = store.get('user.packetInfo')
+      if (
+        this.packetInfo.meta !== this.defaultPacketInfo.meta ||
+        this.packetInfo.destinationCallsign !== this.defaultPacketInfo.destinationCallsign ||
+        this.packetInfo.sourceCallsign !== this.defaultPacketInfo.sourceCallsign
+      ) {
+        this.isAdvancedUser = true
+      }
     },
     isSettingsStore: function() {
       const Store = require('electron-store')
@@ -244,30 +265,39 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
 *
-  box-sizing: border-box;
+  // box-sizing: border-box;
   margin: 0;
   padding: 0;
 
 body
   font-family: 'Source Sans Pro', sans-serif;
 
-#wrapper
-  background: radial-gradient( ellipse at top left, rgba(255, 255, 255, 1) 40%, rgba(229, 229, 229, .9) 100%);
-  height: 100vh;
-  padding: 60px 80px;
-  width: 150vw;
+div
+  padding: 5px 0 5px 0
 
 #logo
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: -40px;
+  margin-top: -20px;
   width: 200px;
 
-main
-  display: flex;
-  justify-content: space-between;
+a
+  color: #1e5ba8
 
-main>div
-  flex-basis: 50%;
+hr
+  margin: 0px;
+  margin-bottom: 10px
+
+.main
+  text-align: center;
+
+.separator
+  height: 1px;
+  background: linear-gradient(to right, white, #51af72, #ababab, #51af72, #fdfdfd);
+  padding: 0px !important;
+  margin: auto;
+  margin-bottom: 10px;
+  max-width: 1000px;
 
 .left-side
   display: flex;
@@ -282,7 +312,7 @@ main>div
   color: #2c3e50;
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 6px;
+  margin-bottom: 10px !important;
 
 .title.alt
   font-size: 18px;
@@ -305,10 +335,23 @@ main>div
   transition: all 0.15s ease;
   box-sizing: border-box;
   border: 1px solid #4fc08d;
+  &:hover
+    background-color: #3d946d;
+    border: 1px solid #3d946d;
+  &:active
+    background-color: #33805c;
+    border: 1px solid #33805c;
 
 .doc button.alt
-  color: #42b983;
+  color: #4fc08d;
   background-color: transparent;
+  &:hover
+    background-color: #3d946d;
+    border: 1px solid #3d946d;
+    color: white;
+  &:active
+    background-color: #33805c;
+    border: 1px solid #33805c;
 
 .fa
   font-size: 13px !important;
@@ -316,10 +359,18 @@ main>div
 .icon
   margin: auto;
 
-.server-info-min-width-750
-  position: absolute;
-  bottom: 3px;
-  left: 15px;
+.advanced-settings
+  text-align: left;
+  display: table;
+  margin: auto;
 
+.server-info
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  background: linear-gradient(to top right, #ffffff, #fbfbfb, #eaeaea);
+  padding-left: 20px;
+  padding-bottom: 15px;
+  padding-top: 0;
 
 </style>
