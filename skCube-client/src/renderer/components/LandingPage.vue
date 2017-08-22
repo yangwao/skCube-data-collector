@@ -45,6 +45,11 @@
           </div>
           <div>
             <button class="alt" @click="sendRaw" v-if="!!this.gsrPath.file">Send single GSR packet</button>
+            <div v-if="!!this.isSuccess && !this.isWatching">
+              <p>
+                Successfully sent!
+              </p>
+            </div>
             <p v-if="!!this.gsrPath.file && !this.isWatching">
               Selected gsrFilePath: {{ gsrPath.file }}
             </p>
@@ -127,6 +132,7 @@ export default {
       },
       isAdvancedUser: false,
       isWatching: false,
+      isSuccess: false,
       appVersion: require('electron').remote.app.getVersion()
     }
   },
@@ -199,6 +205,9 @@ export default {
           if (this.serverReply.status === 'ok' && !this.serverReply.seen) {
             this.serverReply.seen = 'unique!'
           }
+
+          this.isSuccess = true
+          setTimeout(() => {this.isSuccess = false}, 3000)
 
           if (this.serverReply.status === 'ok') {
             let gsrFilename = this.gsrPath.file.split('/')[this.gsrPath.file.split('/').length-1]
