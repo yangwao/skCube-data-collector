@@ -57,6 +57,7 @@
           <div class="separator"></div>
           <div>
             <p>
+              <p v-if="!!this.errorMessage" style="color:red;">Error: {{this.errorMessage}} <br> at file: {{this.gsrPath.file}}</p>
               <button class="alt" @click="loadSettings" v-if="isSettingsStore()">Load last settings</button>
               <button class="alt" @click="saveSettings">Save settings</button>
             </p>
@@ -133,6 +134,7 @@ export default {
       isAdvancedUser: false,
       isWatching: false,
       isSuccess: false,
+      errorMessage: '',
       appVersion: require('electron').remote.app.getVersion()
     }
   },
@@ -177,6 +179,7 @@ export default {
       this.gsrPath.dir = gsrPath[0]
     },
     sendRaw: function() {
+      this.errorMessage = ''
       console.log('using this.gsrPath.file', this.gsrPath.file);
       var request = require('request')
       var fs = require('fs')
@@ -195,12 +198,16 @@ export default {
       request.post({url:this.targetServer, formData: formData},
         (err, httpResponse, body) => {
           if (err) {
+            this.errorMessage = err + this.gsrPath.file
             return console.error('upload failed:', err);
           }
 
           console.log('Server response:', body);
           this.serverReply = JSON.parse(body)
           this.serverReply.timestamp = new Date()
+          if (this.serverReply.error) {
+            this.errorMessage = this.serverReply.error
+          }
 
           if (this.serverReply.status === 'ok' && !this.serverReply.seen) {
             this.serverReply.seen = 'unique!'
