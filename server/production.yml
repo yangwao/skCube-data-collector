@@ -1,0 +1,26 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:3.4
+    restart: "always"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "2"
+    volumes:
+      - ./mongodb:/data/db
+
+  collector:
+    build:
+      context: .
+      dockerfile: collector.dockerfile
+    network_mode: "host"
+    restart: "always"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "2"
+    volumes:
+      - ./gsrStorage:/src/gsrStorage
