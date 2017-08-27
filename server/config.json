@@ -1,7 +1,7 @@
 {
   "rootDir": "/",
   "port": 9001,
-  "address": "127.0.0.1",
+  "address": "0.0.0.0",
   "mongodb": {
     "host": "127.0.0.1",
     "port": 27017,
