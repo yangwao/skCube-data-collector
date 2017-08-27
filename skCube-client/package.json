@@ -1,8 +1,8 @@
 {
-  "name": "skcube-client",
-  "version": "0.0.2",
+  "name": "skCube-client",
+  "version": "0.0.3",
   "author": "Matej Nemcek <ybdaba@gmail.com>",
-  "description": "gathering gsr data to server",
+  "description": "sending gsr data to gsr server",
   "license": "MIT license",
   "main": "./dist/electron/main.js",
   "scripts": {
