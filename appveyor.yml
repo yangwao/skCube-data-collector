@@ -10,7 +10,7 @@ platform:
 
 cache:
   - skCube-client\node_modules
-  - '%APPDATA%\Roaming\npm-cache'
+  - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
   - '%USERPROFILE%\AppData\Local\Yarn\cache'
 

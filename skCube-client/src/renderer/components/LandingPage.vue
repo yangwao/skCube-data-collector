@@ -1,63 +1,113 @@
 <template>
-<div id="wrapper">
-  <img id="logo" src="~@/assets/sk-cube-rr.png" alt="skcube">
-  <main>
-    <div class="left-side">
-      <div class="doc">
-        <div class="title">Getting Started</div>
-        <p>
-          Select your folder where GSR files are created and we will do the rest. We will watch for new GSR packets in directory and send it to collector server)
-        </p>
-        <p>
-          <button @click="openDialogDir">Choose folder</button>
-          <button class="alt" @click="patrolForGsr">Start watching for GSR packets</button>
-        </p>
-        <p>
-          <button class="alt" @click="loadSettings">Load last setting</button>
-          <button class="alt" @click="saveSettings">Save settings</button>
-        </p>
-        <p>
-        <p>
-          <button class="alt" @click="open(targetViewer + (today - last30days))">Show received packets for last 30 days</button>
-        </p>
-          === Advanced users ===
-        </p>
-        <p>
-          Selected gsrDirPath: {{ gsrPath.dir }}
-        </p>
-        <p>
-          Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
-        </p>
-        <p>
-          Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
-        </p>
-        <p>
-          Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
-        </p>
-        <br>
-      </div>
+<div>
+  <section class="section main">
+    <section class="section">
+      <img id="logo" src="~@/assets/sk-cube-rr.png" alt="skcube">
+    </section>
+    <section class="section">
+      <div class="left-side">
         <div class="doc">
-          <button @click="openDialogFile">Choose file</button>
-          <button class="alt" @click="sendRaw">Send single GSR packet</button>
+          <div class="title">How to send your packets:</div>
           <p>
-            Selected gsrFilePath: {{ gsrPath.file }}
+            Select folder where you store your GSR files and we will do the rest. </br>We will also watch for new GSR packets in that directory.
           </p>
+          <div>
+            <button @click="openDialogDir">
+              <i class="fa fa-folder"></i>
+              Choose folder
+            </button>
+          </div>
+          <div>
+            <button class="alt" @click="patrolForGsr" v-if="!!this.gsrPath.dir">Start watching for GSR packets</button>
+            <div v-if="!!this.isWatching">
+            <p>
+              Watching <br>
+              <!--LOADING ANIMATION-->
+              <span class="load-3">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+              </span>
+            <!--END OF LOADING ANIMATION-->
+            </p>
+
+            </div>
+            <p v-if="!!this.gsrPath.dir">
+              Selected gsrDirPath: {{ gsrPath.dir }}
+            </p>
+          </div>
+          <div class="separator"></div>
+          <div>
+            <button @click="openDialogFile">
+              <i class="fa fa-file"></i>
+              Choose file
+            </button>
+          </div>
+          <div>
+            <button class="alt" @click="sendRaw" v-if="!!this.gsrPath.file">Send single GSR packet</button>
+            <div v-if="!!this.isSuccess && !this.isWatching">
+              <p>
+                Successfully sent!
+              </p>
+            </div>
+            <p v-if="!!this.gsrPath.file && !this.isWatching">
+              Selected gsrFilePath: {{ gsrPath.file }}
+            </p>
+          </div>
+          <div class="separator"></div>
+          <div>
+            <p>
+              <p v-if="!!this.errorMessage" style="color:red;">Error: {{this.errorMessage}} <br> at file: {{this.gsrPath.file}}</p>
+              <button class="alt" @click="loadSettings" v-if="isSettingsStore()">Load last settings</button>
+              <button class="alt" @click="saveSettings">Save settings</button>
+            </p>
+          </div>
+          <div class="separator"></div>
           <p>
-            last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
+            <a @click="toggleAdvancedUser">Advanced users<span class="icon"><i class="fa fa-hand-pointer-o"></i></span></a>
           </p>
-          <p>
-            targetServer {{ targetServer }} version {{ this.appVersion }}
-          </p>
+          <div class="advanced-settings" v-if="this.isAdvancedUser">
+            <p>
+              Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
+            </p>
+            <p>
+              Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
+            </p>
+            <p>
+              Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
+            </p>
+          </div>
         </div>
       </div>
-
-  </main>
+    </section>
+  </section>
+  <!--ABSOLUTE POSITION-->
+  <div class="server-info">
+    <div class="separator"></div>
+    <p>
+      <a class="alt" @click="open(targetViewer + (today - last30days))">
+        Show received packets for last 30 days<span class="icon"><i class="fa fa-external-link"></i></span>
+      </a>
+    </p>
+    <p>
+      last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
+    </p>
+    <p>
+      targetServer {{ targetServer }} version {{ this.appVersion }}
+    </p>
+  </div>
+  <!--END OF ABSOLUTE POSITION-->
 </div>
 </template>
 
 <script>
 export default {
   data() {
+    const defaultPacketInfo = {
+      meta: 'null',
+      sourceCallsign: 'OM9SAT',
+      destinationCallsign: '00000'
+    }
     return {
       today: Date.now(),
       last30days: 1000*60*60*24*30,
@@ -72,11 +122,8 @@ export default {
         toBeSentFiles: []
       },
       gsrFilename: '',
-      packetInfo: {
-        meta: 'null',
-        sourceCallsign: 'OM9SAT',
-        destinationCallsign: '00000'
-      },
+      defaultPacketInfo,
+      packetInfo: defaultPacketInfo,
       counter: 0,
       gsrPacket: '',
       serverReply: {
@@ -84,6 +131,10 @@ export default {
         seen: '-',
         timestamp: '-'
       },
+      isAdvancedUser: false,
+      isWatching: false,
+      isSuccess: false,
+      errorMessage: '',
       appVersion: require('electron').remote.app.getVersion()
     }
   },
@@ -128,6 +179,7 @@ export default {
       this.gsrPath.dir = gsrPath[0]
     },
     sendRaw: function() {
+      this.errorMessage = ''
       console.log('using this.gsrPath.file', this.gsrPath.file);
       var request = require('request')
       var fs = require('fs')
@@ -146,16 +198,23 @@ export default {
       request.post({url:this.targetServer, formData: formData},
         (err, httpResponse, body) => {
           if (err) {
+            this.errorMessage = err + this.gsrPath.file
             return console.error('upload failed:', err);
           }
 
           console.log('Server response:', body);
           this.serverReply = JSON.parse(body)
           this.serverReply.timestamp = new Date()
+          if (this.serverReply.error) {
+            this.errorMessage = this.serverReply.error
+          }
 
           if (this.serverReply.status === 'ok' && !this.serverReply.seen) {
             this.serverReply.seen = 'unique!'
           }
+
+          this.isSuccess = true
+          setTimeout(() => {this.isSuccess = false}, 3000)
 
           if (this.serverReply.status === 'ok') {
             let gsrFilename = this.gsrPath.file.split('/')[this.gsrPath.file.split('/').length-1]
@@ -175,6 +234,21 @@ export default {
       const store = new Store()
       this.gsrPath = store.get('user.gsrPath')
       this.packetInfo = store.get('user.packetInfo')
+      if (
+        this.packetInfo.meta !== this.defaultPacketInfo.meta ||
+        this.packetInfo.destinationCallsign !== this.defaultPacketInfo.destinationCallsign ||
+        this.packetInfo.sourceCallsign !== this.defaultPacketInfo.sourceCallsign
+      ) {
+        this.isAdvancedUser = true
+      }
+    },
+    isSettingsStore: function() {
+      const Store = require('electron-store')
+      const store = new Store()
+      if (store.get('user.gsrPath') || store.get('user.packetInfo')) {
+        return true
+      }
+      return false
     },
     patrolForGsr: function() {
       var fs = require('fs')
@@ -188,6 +262,8 @@ export default {
         this.gsrPath.file = this.gsrPath.dir + '/' + this.gsrPath.toBeSentFiles[0]
         this.sendRaw()
       }
+
+      this.isWatching = true;
 
       fs.watch(this.gsrPath.dir, (eventType, filename) => {
         console.log(`event type is: ${eventType}`);
@@ -208,93 +284,149 @@ export default {
       var fs = require('fs')
       this.gsrPath.toBeSentFiles = fs.readdirSync(this.gsrPath.dir).filter(gsr => gsr.split('.')[1] === 'gsr')
       console.log(this.gsrPath.toBeSentFiles)
+    },
+    toggleAdvancedUser: function() {
+      this.isAdvancedUser = !this.isAdvancedUser
     }
   }
 }
 </script>
 
-<style>
+<style lang="sass">
 @import "~bulma/css/bulma.css";
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+*
+  // box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 
-body {
-    font-family: 'Source Sans Pro', sans-serif;
-}
+body
+  font-family: 'Source Sans Pro', sans-serif;
 
-#wrapper {
-    background: radial-gradient( ellipse at top left,
-    rgba(255, 255, 255, 1) 40%,
-    rgba(229, 229, 229, .9) 100%);
-    height: 100vh;
-    padding: 60px 80px;
-    width: 150vw;
-}
+div
+  padding: 5px 0 5px 0
 
-#logo {
-    height: auto;
-    margin-bottom: 20px;
-    width: 200px;
-}
+#logo
+  height: auto;
+  margin-bottom: -40px;
+  margin-top: -20px;
+  width: 200px;
 
-main {
-    display: flex;
-    justify-content: space-between;
-}
+a
+  color: #1e5ba8
 
-main>div {
-    flex-basis: 50%;
-}
+hr
+  margin: 0px;
+  margin-bottom: 10px
 
-.left-side {
-    display: flex;
-    flex-direction: column;
-}
+.main
+  text-align: center;
 
-.welcome {
-    color: #555;
-    font-size: 23px;
-    margin-bottom: 10px;
-}
+.separator
+  height: 1px;
+  background: linear-gradient(to right, white, #51af72, #ababab, #51af72, #fdfdfd);
+  padding: 0px !important;
+  margin: auto;
+  margin-bottom: 10px;
+  max-width: 1000px;
 
-.title {
-    color: #2c3e50;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 6px;
-}
+.left-side
+  display: flex;
+  flex-direction: column;
 
-.title.alt {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
+.welcome
+  color: #555;
+  font-size: 23px;
+  margin-bottom: 10px;
 
-.doc p {
-    color: black;
-    margin-bottom: 10px;
-}
+.title
+  color: #2c3e50;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px !important;
 
-.doc button {
-    font-size: .8em;
-    cursor: pointer;
-    outline: none;
-    padding: 0.75em 2em;
-    border-radius: 2em;
-    display: inline-block;
-    color: #fff;
-    background-color: #4fc08d;
-    transition: all 0.15s ease;
-    box-sizing: border-box;
-    border: 1px solid #4fc08d;
-}
+.title.alt
+  font-size: 18px;
+  margin-bottom: 10px;
 
-.doc button.alt {
-    color: #42b983;
-    background-color: transparent;
-}
+.doc p
+  color: black;
+  margin-bottom: 10px;
+
+
+.doc button
+  font-size: .8em;
+  cursor: pointer;
+  outline: none;
+  padding: 0.75em 2em;
+  border-radius: 2em;
+  display: inline-block;
+  color: #fff;
+  background-color: #4fc08d;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+  border: 1px solid #4fc08d;
+  &:hover
+    background-color: #3d946d;
+    border: 1px solid #3d946d;
+  &:active
+    background-color: #33805c;
+    border: 1px solid #33805c;
+
+.doc button.alt
+  color: #4fc08d;
+  background-color: transparent;
+  &:hover
+    background-color: #3d946d;
+    border: 1px solid #3d946d;
+    color: white;
+  &:active
+    background-color: #33805c;
+    border: 1px solid #33805c;
+
+.fa
+  font-size: 13px !important;
+
+.icon
+  margin: auto;
+
+.advanced-settings
+  text-align: left;
+  display: table;
+  margin: auto;
+
+.server-info
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  background: linear-gradient(to top right, #ffffff, #fbfbfb, #eaeaea);
+  padding-left: 20px;
+  padding-bottom: 15px;
+  padding-top: 0;
+
+  //ANIMATIONS
+.line
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 15px;
+  background-color: #1e5ba8;
+  padding: 0;
+
+.load-3 .line:nth-last-child(1)
+  animation: loadingC .9s .10s linear infinite;
+.load-3 .line:nth-last-child(2)
+  animation: loadingC .9s .30s linear infinite;
+.load-3 .line:nth-last-child(3)
+  animation: loadingC .9s .50s linear infinite;
+
+.load-3
+  display: inline-block;
+
+@keyframes loadingC
+  0 {transform: translate(0,0);}
+  50% {transform: translate(0,13px);}
+  100% {transform: translate(0,0);}
+
 </style>

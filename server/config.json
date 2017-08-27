@@ -19,7 +19,7 @@
   },
   "gsr": {
     "file": {
-      "maxSize": 266,
+      "maxSize": 268,
       "maxLength": 50,
       "storageFolder": "/gsrStorage"
     }
