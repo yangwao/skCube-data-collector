@@ -15,7 +15,7 @@ services:
     build:
       context: .
       dockerfile: collector.dockerfile
-    network_mode: "host"
+    #network_mode: "host"
     restart: "always"
     logging:
       driver: "json-file"
@@ -24,3 +24,5 @@ services:
         max-file: "2"
     volumes:
       - ./gsrStorage:/src/gsrStorage
+    ports:
+      - "9001:9001"
