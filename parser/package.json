@@ -1,6 +1,6 @@
 {
   "name": "gsr-parser",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Parser for GSR packets, supports CDHS, PWR, ADCS and COM packet types.",
   "main": "build/decode.js",
   "typings": "build/decode.d.ts",

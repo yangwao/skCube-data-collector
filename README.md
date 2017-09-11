@@ -5,6 +5,10 @@ data from 🛰 🌌 space
 [Travis-ci](https://travis-ci.org/yangwao/skCube-data-collector)
 [Appveyor](https://ci.appveyor.com/project/yangwao/skcube-data-collector)
 
+### Authors
+* [Matej Nemček](https://github.com/yangwao)
+* [Ivana Zemanovičová](https://github.com/Ivkaa)
+
 ### Built app images
 [Downloads for Linux, Mac OSX and Windows](https://github.com/yangwao/skCube-data-collector/releases) could be found in releases
 
