@@ -68,13 +68,18 @@
           </p>
           <div class="advanced-settings" v-if="this.isAdvancedUser">
             <p>
-              Source Callsign: <input v-model="packetInfo.sourceCallsign" placeholder="source callsign">
+              Source Callsign: <input v-model="packetInfo.sourceCallsign" class="input" placeholder="source callsign">
             </p>
             <p>
-              Destination Callsign: <input v-model="packetInfo.destinationCallsign" placeholder="destination callsign">
+              Destination Callsign: <input v-model="packetInfo.destinationCallsign" class="input" placeholder="destination callsign">
             </p>
             <p>
-              Meta: <input v-model="packetInfo.meta" placeholder="fill your meta">
+              Meta: <input v-model="packetInfo.meta" class="input" placeholder="fill your meta">
+            </p>
+            <p>
+              <button @click="toggleProdEnv" class="alt">Production server</button>
+              <button @click="toggleDevEnv" class="alt">Development server</button>
+              <button @click="toggleLocalhostEnv" class="alt">Localhost server</button>
             </p>
           </div>
         </div>
@@ -93,7 +98,7 @@
       last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
     </p>
     <p>
-      targetServer {{ targetServer }} version {{ this.appVersion }}
+      targetServer {{ this.targetServer }} version {{ this.appVersion }}
     </p>
   </div>
   <!--END OF ABSOLUTE POSITION-->
@@ -111,10 +116,17 @@ export default {
     return {
       today: Date.now(),
       last30days: 1000*60*60*24*30,
-      // targetViewer: 'http://localhost:9001/v1/createdAt/',
-      // targetServer: 'http://localhost:9001/v1/raw',
       targetViewer: 'http://collector.hypersignal.xyz:9001/v1/createdAt/',
       targetServer: 'http://collector.hypersignal.xyz:9001/v1/raw',
+      target: {
+        viewer: '/v1/createdAt/',
+        server: '/v1/raw'
+      },
+      enviroments: {
+        dev: 'http://collector.hypersignal.xyz:9001',
+        production: 'https://collector.skcube.sk',
+        localhost: 'http://localhost:9001',
+      },
       gsrPath: {
         sentDir: 'sent/',
         dir: '',
@@ -287,6 +299,18 @@ export default {
     },
     toggleAdvancedUser: function() {
       this.isAdvancedUser = !this.isAdvancedUser
+    },
+    toggleDevEnv: function() {
+      this.targetServer = this.enviroments.dev + this.target.server
+      this.targetViewer = this.enviroments.dev + this.target.viewer
+    },
+    toggleLocalhostEnv: function() {
+      this.targetServer = this.enviroments.localhost + this.target.server
+      this.targetViewer = this.enviroments.localhost + this.target.viewer
+    },
+    toggleProdEnv: function() {
+      this.targetServer = this.enviroments.production + this.target.server
+      this.targetViewer = this.enviroments.production + this.target.viewer
     }
   }
 }

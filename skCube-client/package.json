@@ -1,6 +1,6 @@
 {
   "name": "skCube-client",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Matej Nemcek <ybdaba@gmail.com>",
   "description": "sending gsr data to gsr server",
   "license": "MIT license",
