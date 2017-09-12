@@ -98,7 +98,7 @@
       last server packet status: {{ serverReply.status }} @ {{ serverReply.timestamp }} seen: {{ serverReply.seen }} packetId: {{ serverReply._id }}
     </p>
     <p>
-      targetServer {{ this.targetServer }} version {{ this.appVersion }}
+      targetServer {{ targetServer }} version {{ appVersion }}
     </p>
   </div>
   <!--END OF ABSOLUTE POSITION-->
