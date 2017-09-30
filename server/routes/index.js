@@ -8,7 +8,7 @@ const db = require('../lib/mongo')
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
-const decoder = require('gsr-parser').parseGsrData
+// const decoder = require('gsr-parser').parseGsrData
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -34,7 +34,7 @@ router.get('/', function (req, res, next) {
 })
 
 router.get('/v1/createdAt/:epochTimeMs', function (req, res, next) {
-  let q = { createdAt: { $gt: parseInt(req.params.epochTimeMs) } }
+  let q = { createdAt: { $gt: 1 } }
   l.info(req.params.epochTimeMs)
   let humanDate = new Date(parseInt(req.params.epochTimeMs)).toUTCString()
   l.info(humanDate)
@@ -93,7 +93,7 @@ router.post('/v1/raw', upload.single('gsr'), function (req, res, next) {
       return res.status(400).json({error: 'not a gsr file'})
     }
 
-    l.info(decoder(data))
+    // l.info(decoder(data))
 
     const id = req.file.filename.split('_')[0]
     let fileChecksum = checksum(data, 'sha512')
