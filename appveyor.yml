@@ -18,7 +18,7 @@ init:
   - git config --global core.autocrlf input
 
 install:
-  - ps: cd skcube-client
+  - ps: cd desktop-client
   - ps: Install-Product node 8 x64
   - choco install yarn --ignore-dependencies
   - git reset --hard HEAD
