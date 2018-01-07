@@ -9,8 +9,11 @@ data from 🛰 🌌 space
 * [Matej Nemček](https://github.com/yangwao)
 * [Ivana Zemanovičová](https://github.com/Ivkaa)
 
+### desktop-client
+![img](screenshot-desktop-client.png)
+
 ### Built app images
-[Downloads for Linux, Mac OSX and Windows](https://github.com/yangwao/skCube-data-collector/releases) could be found in releases
+[Downloads for Linux, Mac OSX and Windows could be found in releases](https://github.com/yangwao/skCube-data-collector/releases) 
 
 ### Api
 [Writing your own client? Server api documentation](server/README.md)
