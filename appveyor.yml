@@ -9,7 +9,7 @@ platform:
   - x64
 
 cache:
-  - skCube-client\node_modules
+  - desktop-client\node_modules
   - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
   - '%USERPROFILE%\AppData\Local\Yarn\cache'
